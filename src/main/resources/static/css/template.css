@@ -1,0 +1,176 @@
+body {
+    background-color: whitesmoke;
+}
+
+nav{
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+.template-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.centered-template-header {
+    position: relative;
+    left: 42.5%;
+}
+
+.sorting-menu {
+    margin-top: 6px;
+}
+
+.delete-employee-form {
+    margin-top: 10px;
+}
+
+.sorting-menu-alone {
+    margin-bottom: 10px;
+}
+
+.list-group.list-group-item {
+    margin-top: 10px;
+}
+
+.my-delete-btn {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.create-employee-btn {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.template_name {
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+.template_name:hover {
+    -webkit-transform: scale(1.01);
+    -ms-transform: scale(1.01);
+    transform: scale(1.01);
+}
+
+.delete-btn{
+    width: 5%;
+    min-width: 40px;
+    height: min-content;
+    margin-top: 3px;
+    margin-bottom: 10px;
+    margin-right: 0;
+    margin-left: auto;
+}
+
+.department-select {
+    margin-bottom: 10px;
+}
+
+.incident a {
+    color: red;
+}
+
+.application-table {
+    margin-top: 10px;
+    border: 1px solid black;
+}
+
+.hover-table tr {
+    background: white;
+}
+
+.hover-table .hover-tr:hover {
+    background-color: darkgrey;
+}
+
+.application-buttons {
+    margin-top: 10px;
+}
+
+.application-buttons form {
+    display: inline;
+}
+
+.application-buttons button {
+    display: inline;
+    vertical-align: middle;
+}
+
+.employees-table {
+    border: 1px solid black;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+@keyframes fade {
+    from { opacity: 1.0; }
+    50% { opacity: 0.0; }
+    to { opacity: 1.0; }
+}
+
+@-webkit-keyframes fade {
+    from { opacity: 1.0; }
+    50% { opacity: 0.0; }
+    to { opacity: 1.0; }
+}
+
+.blink {
+    animation:fade 2000ms infinite;
+    -webkit-animation:fade 2000ms infinite;
+}
+
+.btn-group .alarm {
+    color: red;
+}
+
+.btn-group a {
+    background-color: white; /* Green background */
+    border: 1px solid green; /* Green border */
+    color: black;
+    padding: 10px 24px; /* Some padding */
+    cursor: pointer; /* Pointer/hand icon */
+    float: left; /* Float the buttons side by side */
+}
+
+.btn-group .chosen-button {
+    background-color: #04AA6D; /* Green background */
+}
+
+.btn-group a:not(:last-child) {
+    border-right: none; /* Prevent double borders */
+}
+
+/* Clear floats (clearfix hack) */
+.btn-group:after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+/* Add a background color on hover */
+.btn-group a:hover {
+    background-color: #04AA6D;
+}
+
+.vought-footer{
+    margin-top: 5%;
+}
+
+.control-items {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.asterisk {
+    color: red;
+}
+
+td .left-element {
+    margin-left: 10%;
+}
+
+.table-center {
+    margin-top: 30px;
+}

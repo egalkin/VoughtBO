@@ -1,0 +1,14 @@
+package ru.ifmo.egalkin.vought.controller.request;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ApplicationRejectionRequest {
+
+    private String reason;
+
+}

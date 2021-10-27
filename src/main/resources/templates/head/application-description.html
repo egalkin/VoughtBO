@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/grid-form.css}"/>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/head/home">Vought Head Subsystem</a>
+        </div>
+        <form th:action="@{/logout}" method="post">
+            <input type="submit" class="btn btn-light" value="Выйти"/>
+        </form>
+    </nav>
+</head>
+<body>
+<div class="container mt-5 mb-5">
+
+    <div class="template-header">
+        <H1>Заявка на согласование</H1>
+    </div>
+
+    <section class="all-actual-information">
+        <table class="table application-table">
+            <tbody>
+            <tr>
+                <td>
+                    <p class="table-center left-element" th:text="${appl.getName()}"></p>
+                </td>
+                <td>
+                    <p th:utext="'<strong>Тип:</strong> ' + ${appl.getApplicationType().getDescription()}"></p>
+                    <p th:utext="'<strong>От:</strong> ' + ${appl.getCreator().getFullName()}"></p>
+                    <p th:utext="'<strong>Отдел:</strong> ' + ${appl.getCreator().getDepartment().getDescription()}"></p>
+                </td>
+                <td class="text-center">
+                    <div class = "table-center">
+                        <label><strong>Статус</strong></label>
+                        <p th:text="${appl.getApplicationStatus().getDescription()}"></p>
+                    </div>
+                </td>
+                <td class="text-center">
+                    <div class = "table-center">
+                        <label><strong>Дата обновления</strong></label>
+                        <p th:text="${appl.getUpdateDate().toString()}"></p>
+                    </div>
+                </td>
+                <td class="text-center" th:if="${appl.isMeeting()}">
+                    <div class = "table-center">
+                        <label><strong>Дата проведения встречи</strong></label>
+                        <p th:text="${appl.getMeetingTimeFormatted()}"></p>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class = "inner-grid-form">
+            <div class="form-group">
+                <label for="">Описание заявки</label>
+                <textarea class="application-description" id="" cols="45" rows="7" readonly="readonly" th:text="${appl.getDescription()}"></textarea>
+            </div>
+            <div class="form-group" th:if="${appl.notEmptyRejectReason()}">
+                <label for="">Причина отказа</label>
+                <textarea class="application-description" cols="45" rows="7" readonly="readonly" th:text="${appl.getRejectReason()}"></textarea>
+            </div>
+        </div>
+        <div class = "application-buttons" th:if="${appl.isPending()}">
+            <form th:action="@{/head/applications/{id}/approve(id=${appl.getId()})}" method="post">
+                <button type="submit" class="btn btn-outline-dark">Одобрить</button>
+            </form>
+            <form th:action="@{/head/applications/{id}/reject(id=${appl.getId()})}" method="get">
+                <button type="submit" class="btn btn-outline-dark">Отказать</button>
+            </form>
+        </div>
+        <div class="btn-group d-flex vought-footer" role="group" aria-label="...">
+            <a href="/head/employees" class="btn btn-default w-100">Персонал</a>
+            <a class="btn btn-default w-100">Просмотр состояния</a>
+            <a href="/head/applications" class="btn btn-default w-100 chosen-button">Заявки</a>
+        </div>
+    </section>
+</div>
+
+</body>
+</html>

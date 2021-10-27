@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/template.css}"/>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/lab/home">Vought Laboratory Subsystem</a>
+        </div>
+        <form th:action="@{/logout}" method="post">
+            <input type="submit" class="btn btn-light" value="Выйти"/>
+        </form>
+    </nav>
+</head>
+<body>
+<div class="container mt-5 mb-5">
+
+    <div class="template-header">
+        <H1>Заявки</H1>
+    </div>
+
+    <section class="all-actual-information">
+        <div class = "control-items">
+            <div class = "sorting-menu">
+                <label for="sortingType">Сортировать по </label>
+                <select class = "" name = "sortingType"  id="sortingType" onchange="">
+                    <option th:value="${selectedSortingType}" th:text="${selectedSortingType.getDescription}"></option>
+                    <option
+                            th:each="sortingType: ${sortingTypes}"
+                            th:value="${sortingType.toString()}"
+                            th:text="${sortingType.getDescription()}">
+                    </option>
+                </select>
+            </div>
+            <a class="btn btn-outline-dark"  role="button">Создать заявку</a>
+        </div>
+        <table class="table hover-table application-table">
+            <tbody>
+            <tr th:each="el : ${applications}" class="clickable-row hover-tr" th:href="@{/pr/applications/{id}(id=${el.id})}">
+                <td>
+                    <p class="table-center left-element" th:text="${el.getName()}"></p>
+                </td>
+                <td class="text-center">
+                    <div class = "table-center">
+                        <label><strong>Статус</strong></label>
+                        <p th:text="${el.getApplicationStatus().getDescription()}"></p>
+                    </div>
+                </td>
+                <td class="text-center">
+                    <div class = "table-center">
+                        <label><strong>Дата обновления</strong></label>
+                        <p th:text="${el.getUpdateDate().toString()}"></p>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="btn-group d-flex vought-footer" role="group" aria-label="...">
+            <a class="btn btn-default w-100">Лаборатория</a>
+            <a href="/lab/applications" class="btn btn-default w-100 chosen-button">Заявки</a>
+        </div>
+    </section>
+</div>
+</body>
+</html>
