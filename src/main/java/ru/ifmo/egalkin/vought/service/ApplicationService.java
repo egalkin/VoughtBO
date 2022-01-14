@@ -4,11 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.ifmo.egalkin.vought.controller.request.HeroApplicationCreationRequest;
+import ru.ifmo.egalkin.vought.controller.request.ScientistApplicationRequest;
 import ru.ifmo.egalkin.vought.controller.request.PrApplicationCreationRequest;
 import ru.ifmo.egalkin.vought.controller.request.ApplicationRejectionRequest;
 import ru.ifmo.egalkin.vought.model.Application;
 import ru.ifmo.egalkin.vought.model.Employee;
-import ru.ifmo.egalkin.vought.model.Event;
 import ru.ifmo.egalkin.vought.model.enums.ApplicationStatus;
 import ru.ifmo.egalkin.vought.model.enums.ApplicationType;
 import ru.ifmo.egalkin.vought.model.rrepository.EmployeeRepository;
@@ -58,6 +58,21 @@ public class ApplicationService {
                 .build();
         applicationRepository.save(application);
     }
+
+    @Transactional
+    public void createLabExperimentRequest(String scientistEmail, ScientistApplicationRequest request) {
+        Employee scientist = employeeRepository.findByEmail(scientistEmail);
+        Application application = Application.builder()
+                .name(request.getName())
+                .description(request.getDescription())
+                .updateDate(LocalDate.now())
+                .applicationType(request.getApplicationType())
+                .applicationStatus(ApplicationStatus.PENDING)
+                .creator(scientist)
+                .build();
+        applicationRepository.save(application);
+    }
+
 
     public List<Application> getEmployeeActiveApplications(String employeeEmail) {
         Employee employee = employeeRepository.findByEmail(employeeEmail);

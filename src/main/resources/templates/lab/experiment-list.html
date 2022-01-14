@@ -22,46 +22,32 @@
 <div class="container mt-5 mb-5">
 
     <div class="template-header">
-        <H1>Заявки</H1>
+        <H1>Список экспериментов</H1>
     </div>
 
     <section class="all-actual-information">
         <div class = "control-items">
-            <div class = "sorting-menu">
-                <label for="sortingType">Сортировать по </label>
-                <select class = "" name = "sortingType"  id="sortingType" onchange="">
-                    <option th:value="${selectedSortingType}" th:text="${selectedSortingType.getDescription}"></option>
-                    <option
-                            th:each="sortingType: ${sortingTypes}"
-                            th:value="${sortingType.toString()}"
-                            th:text="${sortingType.getDescription()}">
-                    </option>
-                </select>
-            </div>
-            <a class="btn btn-outline-dark" href="/lab/applications/new" role="button">Создать заявку</a>
+            <a class="btn btn-outline-dark" href="/lab/experiment/new" role="button">Создать эксперимент</a>
         </div>
         <table class="table hover-table application-table">
             <tbody>
-            <tr th:each="el : ${applications}" class="clickable-row hover-tr" th:href="@{/lab/applications/{id}(id=${el.id})}">
-                <td>
-                    <p class="table-center left-element" th:text="${el.getName()}"></p>
-                </td>
+            <tr th:each="el : ${experiments}" class="clickable-row hover-tr" th:href="@{/lab/experiments/{id}(id=${el.id})}">
                 <td class="text-center">
                     <div class = "table-center">
-                        <label><strong>Тип</strong></label>
-                        <p th:text="${el.getApplicationType().getDescription()}"></p>
+                        <label ><strong>Название</strong></label>
+                        <p th:text="${el.getName()}"></p>
                     </div>
                 </td>
                 <td class="text-center">
                     <div class = "table-center">
-                        <label><strong>Статус</strong></label>
-                        <p th:text="${el.getApplicationStatus().getDescription()}"></p>
+                        <label><strong>Цель</strong></label>
+                        <p th:text="${el.getGoal()}"></p>
                     </div>
                 </td>
                 <td class="text-center">
                     <div class = "table-center">
-                        <label><strong>Дата обновления</strong></label>
-                        <p th:text="${el.getUpdateDate().toString()}"></p>
+                        <label><strong>Описание</strong></label>
+                        <p th:text="${el.getDescription()}"></p>
                     </div>
                 </td>
             </tr>
