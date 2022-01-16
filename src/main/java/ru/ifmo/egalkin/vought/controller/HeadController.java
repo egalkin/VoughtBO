@@ -13,13 +13,11 @@ import ru.ifmo.egalkin.vought.controller.request.HeroUpdateRequest;
 import ru.ifmo.egalkin.vought.controller.request.ApplicationRejectionRequest;
 import ru.ifmo.egalkin.vought.model.Application;
 import ru.ifmo.egalkin.vought.model.Event;
-import ru.ifmo.egalkin.vought.model.Incident;
 import ru.ifmo.egalkin.vought.model.enums.ApplicationSortingType;
 import ru.ifmo.egalkin.vought.model.enums.Department;
 import ru.ifmo.egalkin.vought.model.Employee;
 import ru.ifmo.egalkin.vought.model.enums.EmployeeSortingType;
 import ru.ifmo.egalkin.vought.model.enums.EventAggregationType;
-import ru.ifmo.egalkin.vought.model.rrepository.EmployeeRepository;
 import ru.ifmo.egalkin.vought.service.EmployeeService;
 import ru.ifmo.egalkin.vought.service.ApplicationService;
 import ru.ifmo.egalkin.vought.service.EventService;
@@ -44,8 +42,6 @@ public class HeadController {
     @Autowired
     private EmployeeService employeeService;
     @Autowired
-    private EmployeeRepository employeeRepository;
-    @Autowired
     private ApplicationService applicationService;
     @Autowired
     private EventService eventService;
@@ -62,11 +58,11 @@ public class HeadController {
     public String employeeList(@PathParam("sortingType") @Nullable EmployeeSortingType sortingType,
                                Model model,
                                Principal principal) {
-        Employee headEmployee = employeeRepository.findByEmail(principal.getName());
+        Employee headEmployee = employeeService.findByEmail(principal.getName());
         EmployeeSortingType selectedSortingType;
         List<Employee> employees = headEmployee.isCeo() ?
-                employeeRepository.findAllByIdNotIn(List.of(headEmployee.getId())) :
-                employeeRepository.findByDepartmentNotIn(List.of(Department.HEAD));
+                employeeService.findAllByIdNotIn(List.of(headEmployee.getId())) :
+                employeeService.findByDepartmentNotIn(List.of(Department.HEAD));
         Comparator<Employee> employeeComparator;
         selectedSortingType = Objects.requireNonNullElse(sortingType, EmployeeSortingType.DEPARTMENT_ASC);
         switch (selectedSortingType) {
@@ -99,7 +95,7 @@ public class HeadController {
     @PreAuthorize("hasAnyRole('CEO', 'HEAD')")
     @GetMapping("/employees/{id}")
     public String viewEmployee(@PathVariable("id") Long employeeId, Model model) {
-        Employee employee = employeeRepository.getById(employeeId);
+        Employee employee = employeeService.findById(employeeId);
         model.addAttribute("employee", employee);
         return "head/employee-edit";
     }
@@ -115,7 +111,7 @@ public class HeadController {
     @PreAuthorize("hasAnyRole('CEO', 'HEAD')")
     @GetMapping("/employees/hero/{id}")
     public String viewHero(@PathVariable("id") Long employeeId, Model model) {
-        Employee hero = employeeRepository.getById(employeeId);
+        Employee hero = employeeService.findById(employeeId);
         model.addAttribute("hero", hero);
         return "head/hero-edit";
     }
@@ -132,7 +128,7 @@ public class HeadController {
     @PreAuthorize("hasAnyRole('CEO', 'HEAD')")
     @PostMapping("/employees/delete/{id}")
     public String deleteEmployee(@PathVariable("id") Long employeeId) {
-        employeeRepository.deleteById(employeeId);
+        employeeService.deleteById(employeeId);
         return "redirect:/head/employees";
     }
 

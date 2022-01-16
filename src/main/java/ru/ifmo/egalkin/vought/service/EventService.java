@@ -8,7 +8,6 @@ import ru.ifmo.egalkin.vought.model.Application;
 import ru.ifmo.egalkin.vought.model.Employee;
 import ru.ifmo.egalkin.vought.model.Event;
 import ru.ifmo.egalkin.vought.model.enums.EventAggregationType;
-import ru.ifmo.egalkin.vought.model.rrepository.EmployeeRepository;
 import ru.ifmo.egalkin.vought.model.rrepository.EventRepository;
 
 import java.time.LocalDateTime;
@@ -22,11 +21,11 @@ public class EventService {
     @Autowired
     private EventRepository eventRepository;
     @Autowired
-    private EmployeeRepository employeeRepository;
+    private EmployeeService employeeService;
 
     @Transactional
     public void createEvent(String prManagerEmail, EventCreationRequest request) {
-        Employee prManager = employeeRepository.findByEmail(prManagerEmail);
+        Employee prManager = employeeService.findByEmail(prManagerEmail);
         Event event = Event.builder()
                 .name(request.getName())
                 .priority(request.getPriority())
@@ -36,16 +35,16 @@ public class EventService {
                 .creator(prManager)
                 .build();
         eventRepository.save(event);
-        List<Employee> heroes = employeeRepository.findAllById(request.getHeroesIds());
+        List<Employee> heroes = employeeService.findAllById(request.getHeroesIds());
         for (Employee hero : heroes) {
             hero.addEvent(event);
-            employeeRepository.save(hero);
+            employeeService.save(hero);
         }
     }
 
     @Transactional
     public void createMeetingEvent(String headEmail, Application application) {
-        Employee headManager = employeeRepository.findByEmail(headEmail);
+        Employee headManager = employeeService.findByEmail(headEmail);
         Employee meetingCreator = application.getCreator();
         Event event = Event.builder()
                 .name(application.getName())
@@ -59,13 +58,13 @@ public class EventService {
         eventRepository.save(event);
         headManager.addEvent(event);
         meetingCreator.addEvent(event);
-        employeeRepository.save(headManager);
-        employeeRepository.save(meetingCreator);
+        employeeService.save(headManager);
+        employeeService.save(meetingCreator);
     }
 
     public List<Event> getEmployeeActualEventsByAggregationType(String employeeEmail,
                                                                 EventAggregationType aggregationType) {
-        Employee employee = employeeRepository.findByEmail(employeeEmail);
+        Employee employee = employeeService.findByEmail(employeeEmail);
         return getEmployeeActualEventsByAggregationType(employee.getEvents(), aggregationType);
     }
 

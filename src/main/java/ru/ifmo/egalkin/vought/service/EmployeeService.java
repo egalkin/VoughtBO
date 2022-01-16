@@ -8,10 +8,10 @@ import ru.ifmo.egalkin.vought.controller.request.EmployeeUpdateRequest;
 import ru.ifmo.egalkin.vought.controller.request.HeroUpdateRequest;
 import ru.ifmo.egalkin.vought.model.Employee;
 import ru.ifmo.egalkin.vought.model.Role;
+import ru.ifmo.egalkin.vought.model.enums.Department;
 import ru.ifmo.egalkin.vought.model.rrepository.EmployeeRepository;
 import ru.ifmo.egalkin.vought.model.rrepository.RoleRepository;
 import ru.ifmo.egalkin.vought.utils.EmailUtils;
-import ru.ifmo.egalkin.vought.utils.TransliterateUtils;
 
 import java.util.List;
 
@@ -24,6 +24,42 @@ public class EmployeeService {
     private EmployeeRepository employeeRepository;
     @Autowired
     private RoleRepository roleRepository;
+
+    public Employee findByEmail(String email) {
+        return employeeRepository.findByEmail(email);
+    }
+
+    public List<Employee> findAllByIdNotIn(List<Long> ids) {
+        return employeeRepository.findAllByIdNotIn(ids);
+    }
+
+    public List<Employee> findByDepartmentNotIn(List<Department> departments) {
+        return employeeRepository.findByDepartmentNotIn(departments);
+    }
+
+    public Employee findById(Long id) {
+        return employeeRepository.findById(id).get();
+    }
+
+    public void deleteById(Long id) {
+        employeeRepository.deleteById(id);
+    }
+
+    public List<Employee> findAllByDepartment(Department department) {
+        return employeeRepository.findAllByDepartment(department);
+    }
+
+    public List<Employee> findUnwardedHeroes() {
+        return employeeRepository.findUnwardedHeroes();
+    }
+
+    public List<Employee> findAllById(List<Long> ids) {
+        return employeeRepository.findAllById(ids);
+    }
+
+    public void save(Employee employee) {
+        employeeRepository.save(employee);
+    }
 
     @Transactional
     public void editEmployee(Long employeeId, EmployeeUpdateRequest request) {

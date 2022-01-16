@@ -8,7 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.ifmo.egalkin.vought.controller.request.ExperimentCreateRequest;
-import ru.ifmo.egalkin.vought.controller.request.IncidentCreationRequest;
 import ru.ifmo.egalkin.vought.controller.request.ScientistApplicationRequest;
 import ru.ifmo.egalkin.vought.controller.request.SubjectCreationRequest;
 import ru.ifmo.egalkin.vought.model.Application;
@@ -16,12 +15,9 @@ import ru.ifmo.egalkin.vought.model.Experiment;
 import ru.ifmo.egalkin.vought.model.Subject;
 import ru.ifmo.egalkin.vought.model.enums.ApplicationSortingType;
 import ru.ifmo.egalkin.vought.model.enums.ApplicationType;
-import ru.ifmo.egalkin.vought.model.enums.IncidentType;
-import ru.ifmo.egalkin.vought.model.rrepository.EmployeeRepository;
 import ru.ifmo.egalkin.vought.model.rrepository.ExperimentRepository;
 import ru.ifmo.egalkin.vought.model.rrepository.SubjectRepository;
 import ru.ifmo.egalkin.vought.service.ApplicationService;
-import ru.ifmo.egalkin.vought.service.EmployeeService;
 import ru.ifmo.egalkin.vought.service.ExperimentService;
 import ru.ifmo.egalkin.vought.service.SubjectService;
 
@@ -46,11 +42,6 @@ public class LaboratoryController {
 
     @Autowired
     private ApplicationService applicationService;
-
-    @Autowired
-    private EmployeeService employeeService;
-    @Autowired
-    private EmployeeRepository employeeRepository;
 
     @Autowired
     private SubjectService subjectService;
@@ -134,7 +125,7 @@ public class LaboratoryController {
             //     model.addAttribute("applicationTypes", ApplicationType.values());
             return "lab/create-application";
         }
-        applicationService.createLabExperimentRequest(principal.getName(), request);
+        applicationService.createScientistRequest(principal.getName(), request);
         return "redirect:/lab/applications";
     }
 

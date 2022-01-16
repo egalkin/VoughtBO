@@ -6,22 +6,29 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.ifmo.egalkin.vought.controller.request.IncidentCreationRequest;
 import ru.ifmo.egalkin.vought.model.Employee;
 import ru.ifmo.egalkin.vought.model.Incident;
-import ru.ifmo.egalkin.vought.model.rrepository.EmployeeRepository;
 import ru.ifmo.egalkin.vought.model.rrepository.IncidentRepository;
 
-import java.lang.annotation.Target;
+import java.util.List;
 
 @Service
 public class IncidentService {
 
     @Autowired
-    private EmployeeRepository employeeRepository;
+    private EmployeeService employeeService;
     @Autowired
     private IncidentRepository incidentRepository;
 
+    public Incident findFirstByActive(Boolean active) {
+        return incidentRepository.findFirstByActive(active);
+    }
+
+    public List<Incident> findAllByActive(Boolean active) {
+        return incidentRepository.findAllByActive(active);
+    }
+
     @Transactional
     public void createIncident(String securityEmail, IncidentCreationRequest request) {
-        Employee securityManager = employeeRepository.findByEmail(securityEmail);
+        Employee securityManager = employeeService.findByEmail(securityEmail);
         Incident incident = Incident.builder()
                 .address(request.getAddress())
                 .incidentType(request.getIncidentType())

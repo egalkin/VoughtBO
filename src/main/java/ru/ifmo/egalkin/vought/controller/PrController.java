@@ -16,14 +16,11 @@ import ru.ifmo.egalkin.vought.controller.request.PrApplicationCreationRequest;
 import ru.ifmo.egalkin.vought.model.Application;
 import ru.ifmo.egalkin.vought.model.Employee;
 import ru.ifmo.egalkin.vought.model.enums.ApplicationSortingType;
-import ru.ifmo.egalkin.vought.model.rrepository.EmployeeRepository;
-import ru.ifmo.egalkin.vought.model.rrepository.ApplicationRepository;
 import ru.ifmo.egalkin.vought.service.EmployeeService;
 import ru.ifmo.egalkin.vought.service.EventService;
 import ru.ifmo.egalkin.vought.service.ApplicationService;
 
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -43,14 +40,11 @@ public class PrController {
 
     @Autowired
     private EmployeeService employeeService;
-    @Autowired
-    private EmployeeRepository employeeRepository;
-    @Autowired
-    private ApplicationRepository applicationRepository;
 
     @Autowired
     private EventService eventService;
     @Autowired
+
     private ApplicationService applicationService;
 
 
@@ -63,7 +57,7 @@ public class PrController {
     @PreAuthorize("hasRole('PR_MANAGER')")
     @GetMapping("wards")
     public String wards(Model model, Principal principal) {
-        Employee prManager = employeeRepository.findByEmail(principal.getName());
+        Employee prManager = employeeService.findByEmail(principal.getName());
         model.addAttribute("wards", prManager.getWards());
         return "pr/wards-list";
     }
@@ -71,7 +65,7 @@ public class PrController {
     @PreAuthorize("hasRole('PR_MANAGER')")
     @GetMapping("/wards/add")
     public String wardView(Model model) {
-        List<Employee> unwardedHeroes = employeeRepository.findUnwardedHeroes();
+        List<Employee> unwardedHeroes = employeeService.findUnwardedHeroes();
         model.addAttribute("unwardedHeroes", unwardedHeroes);
         return "pr/add-wards";
     }

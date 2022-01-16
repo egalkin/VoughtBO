@@ -19,9 +19,8 @@ import ru.ifmo.egalkin.vought.model.Incident;
 import ru.ifmo.egalkin.vought.model.enums.ApplicationSortingType;
 import ru.ifmo.egalkin.vought.model.enums.Department;
 import ru.ifmo.egalkin.vought.model.enums.EventAggregationType;
-import ru.ifmo.egalkin.vought.model.rrepository.EmployeeRepository;
-import ru.ifmo.egalkin.vought.model.rrepository.IncidentRepository;
 import ru.ifmo.egalkin.vought.service.ApplicationService;
+import ru.ifmo.egalkin.vought.service.EmployeeService;
 import ru.ifmo.egalkin.vought.service.EventService;
 import ru.ifmo.egalkin.vought.service.IncidentService;
 
@@ -53,10 +52,7 @@ public class HeroController {
     private ApplicationService applicationService;
 
     @Autowired
-    private IncidentRepository incidentRepository;
-
-    @Autowired
-    private EmployeeRepository employeeRepository;
+    private EmployeeService employeeService;
 
     @Autowired
     private IncidentService incidentService;
@@ -67,7 +63,7 @@ public class HeroController {
     @PreAuthorize("hasRole('HERO')")
     @GetMapping("/home")
     public String home(Model model) {
-        Incident incident = incidentRepository.findFirstByActive(true);
+        Incident incident = incidentService.findFirstByActive(true);
         model.addAttribute("anyIncident", incident != null);
         return "hero/home";
     }
@@ -78,7 +74,7 @@ public class HeroController {
                                Model model,
                                Principal principal) {
         ApplicationSortingType selectedSortingType;
-        Incident incident = incidentRepository.findFirstByActive(true);
+        Incident incident = incidentService.findFirstByActive(true);
         List<Application> applications = applicationService.getEmployeeApplications(principal.getName());
         Comparator<Application> applicationComparator;
         selectedSortingType = Objects.requireNonNullElse(sortingType, ApplicationSortingType.DATE_ASC);
@@ -114,7 +110,7 @@ public class HeroController {
     @PreAuthorize("hasRole('HERO')")
     @GetMapping("/applications/{id}")
     public String applicationDescription(@PathVariable Long id, Model model) {
-        Incident incident = incidentRepository.findFirstByActive(true);
+        Incident incident = incidentService.findFirstByActive(true);
         model.addAttribute("anyIncident", incident != null);
         model.addAttribute("appl", applicationService.getApplicationById(id));
         return "hero/application-description";
@@ -124,8 +120,8 @@ public class HeroController {
     @GetMapping("/applications/new")
     public String applicationView(HeroApplicationCreationRequest heroApplicationCreationRequest,
                                   Model model) {
-        List<Employee> headEmployees = employeeRepository.findAllByDepartment(Department.HEAD);
-        Incident incident = incidentRepository.findFirstByActive(true);
+        List<Employee> headEmployees = employeeService.findAllByDepartment(Department.HEAD);
+        Incident incident = incidentService.findFirstByActive(true);
         model.addAttribute("anyIncident", incident != null);
         model.addAttribute("headEmployees", headEmployees);
         return "hero/create-application";
@@ -147,9 +143,9 @@ public class HeroController {
     @PreAuthorize("hasRole('HERO')")
     @GetMapping("/incidents")
     public String incidentsList(Model model) {
-        Incident incident = incidentRepository.findFirstByActive(true);
+        Incident incident = incidentService.findFirstByActive(true);
         model.addAttribute("anyIncident", incident != null);
-        model.addAttribute("incidents", incidentRepository.findAllByActive(true));
+        model.addAttribute("incidents", incidentService.findAllByActive(true));
         return "hero/incident-list";
     }
 
@@ -166,7 +162,7 @@ public class HeroController {
                                Model model,
                                Principal principal) {
         EventAggregationType selectedAggregationType;
-        Incident incident = incidentRepository.findFirstByActive(true);
+        Incident incident = incidentService.findFirstByActive(true);
         selectedAggregationType = Objects.requireNonNullElse(aggregationType, EventAggregationType.DAY);
         List<Event> events = eventService.getEmployeeActualEventsByAggregationType(principal.getName(), selectedAggregationType);
         List<EventAggregationType> aggregationTypes = Arrays.stream(EventAggregationType.values())

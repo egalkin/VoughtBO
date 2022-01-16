@@ -11,7 +11,6 @@ import ru.ifmo.egalkin.vought.model.Application;
 import ru.ifmo.egalkin.vought.model.Employee;
 import ru.ifmo.egalkin.vought.model.enums.ApplicationStatus;
 import ru.ifmo.egalkin.vought.model.enums.ApplicationType;
-import ru.ifmo.egalkin.vought.model.rrepository.EmployeeRepository;
 import ru.ifmo.egalkin.vought.model.rrepository.ApplicationRepository;
 
 import java.time.LocalDate;
@@ -23,13 +22,13 @@ public class ApplicationService {
     @Autowired
     private ApplicationRepository applicationRepository;
     @Autowired
-    private EmployeeRepository employeeRepository;
+    private EmployeeService employeeService;
     @Autowired
     private EventService eventService;
 
     @Transactional
     public void createPrRequest(String prManagerEmail, PrApplicationCreationRequest request) {
-        Employee prManager = employeeRepository.findByEmail(prManagerEmail);
+        Employee prManager = employeeService.findByEmail(prManagerEmail);
         Application application = Application.builder()
                 .name(request.getName())
                 .description(request.getDescription())
@@ -44,8 +43,8 @@ public class ApplicationService {
 
     @Transactional
     public void createHeroRequest(String heroEmail, HeroApplicationCreationRequest request) {
-        Employee hero = employeeRepository.findByEmail(heroEmail);
-        Employee meetingAimEmployee = employeeRepository.findById(request.getMeetingAimEmployeeId()).get();
+        Employee hero = employeeService.findByEmail(heroEmail);
+        Employee meetingAimEmployee = employeeService.findById(request.getMeetingAimEmployeeId());
         Application application = Application.builder()
                 .name(request.getName())
                 .description(request.getDescription())
@@ -60,8 +59,8 @@ public class ApplicationService {
     }
 
     @Transactional
-    public void createLabExperimentRequest(String scientistEmail, ScientistApplicationRequest request) {
-        Employee scientist = employeeRepository.findByEmail(scientistEmail);
+    public void createScientistRequest(String scientistEmail, ScientistApplicationRequest request) {
+        Employee scientist = employeeService.findByEmail(scientistEmail);
         Application application = Application.builder()
                 .name(request.getName())
                 .description(request.getDescription())
@@ -75,17 +74,17 @@ public class ApplicationService {
 
 
     public List<Application> getEmployeeActiveApplications(String employeeEmail) {
-        Employee employee = employeeRepository.findByEmail(employeeEmail);
+        Employee employee = employeeService.findByEmail(employeeEmail);
         return applicationRepository.findAllByCreatorAndApplicationStatus(employee, ApplicationStatus.PENDING);
     }
 
     public List<Application> getEmployeeApplications(String employeeEmail) {
-        Employee creator = employeeRepository.findByEmail(employeeEmail);
+        Employee creator = employeeService.findByEmail(employeeEmail);
         return applicationRepository.findAllByCreator(creator);
     }
 
     public List<Application> getHeadEmployeeApplications(String employeeEmail) {
-        Employee head = employeeRepository.findByEmail(employeeEmail);
+        Employee head = employeeService.findByEmail(employeeEmail);
         return applicationRepository.findByMeetingAimEmployeeIsNullOrMeetingAimEmployee(head);
     }
 
@@ -104,7 +103,7 @@ public class ApplicationService {
     @Transactional
     public void approveApplication(String headEmail, Long applicationId) {
         Application application = applicationRepository.findById(applicationId).get();
-        Employee approver = employeeRepository.findByEmail(headEmail);
+        Employee approver = employeeService.findByEmail(headEmail);
         if (application.getApplicationType() == ApplicationType.MEETING) {
             eventService.createMeetingEvent(headEmail, application);
         }
@@ -117,7 +116,7 @@ public class ApplicationService {
     @Transactional
     public void rejectApplication(String headEmail, Long requestId, ApplicationRejectionRequest request) {
         Application application = applicationRepository.findById(requestId).get();
-        Employee rejector = employeeRepository.findByEmail(headEmail);
+        Employee rejector = employeeService.findByEmail(headEmail);
         application.setApplicationStatus(ApplicationStatus.REJECTED);
         application.setUpdateDate(LocalDate.now());
         application.setRejectReason(request.getReason());
