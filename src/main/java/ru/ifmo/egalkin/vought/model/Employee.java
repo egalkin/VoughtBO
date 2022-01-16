@@ -92,6 +92,20 @@ public class Employee {
     )
     private Collection<Event> events = new ArrayList<>();
 
+
+    @ManyToMany
+    @JoinTable(
+            name="employee_experiments",
+            joinColumns = @JoinColumn(
+                    name = "employee_id", referencedColumnName = "id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "experiment_id", referencedColumnName = "id"
+            )
+    )
+    private Collection<Experiment> experiments = new ArrayList<>();
+
+
     public String getFullName() {
         if (isHero() && nickname != null) {
             return nickname;

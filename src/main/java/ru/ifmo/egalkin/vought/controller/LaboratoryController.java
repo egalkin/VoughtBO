@@ -5,12 +5,27 @@ import org.springframework.lang.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import ru.ifmo.egalkin.vought.controller.request.ExperimentCreateRequest;
+import ru.ifmo.egalkin.vought.controller.request.IncidentCreationRequest;
+import ru.ifmo.egalkin.vought.controller.request.ScientistApplicationRequest;
+import ru.ifmo.egalkin.vought.controller.request.SubjectCreationRequest;
 import ru.ifmo.egalkin.vought.model.Application;
+import ru.ifmo.egalkin.vought.model.Experiment;
+import ru.ifmo.egalkin.vought.model.Subject;
 import ru.ifmo.egalkin.vought.model.enums.ApplicationSortingType;
+import ru.ifmo.egalkin.vought.model.enums.ApplicationType;
+import ru.ifmo.egalkin.vought.model.enums.IncidentType;
+import ru.ifmo.egalkin.vought.model.rrepository.EmployeeRepository;
+import ru.ifmo.egalkin.vought.model.rrepository.ExperimentRepository;
+import ru.ifmo.egalkin.vought.model.rrepository.SubjectRepository;
 import ru.ifmo.egalkin.vought.service.ApplicationService;
+import ru.ifmo.egalkin.vought.service.EmployeeService;
+import ru.ifmo.egalkin.vought.service.ExperimentService;
+import ru.ifmo.egalkin.vought.service.SubjectService;
 
+import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 import java.security.Principal;
 import java.util.Arrays;
@@ -32,6 +47,22 @@ public class LaboratoryController {
     @Autowired
     private ApplicationService applicationService;
 
+    @Autowired
+    private EmployeeService employeeService;
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private SubjectService subjectService;
+
+    @Autowired
+    private SubjectRepository subjectRepository;
+
+    @Autowired
+    private ExperimentRepository experimentRepository;
+
+    @Autowired
+    private ExperimentService experimentService;
 
     @PreAuthorize("hasRole('SCIENTIST')")
     @GetMapping("/home")
@@ -74,5 +105,88 @@ public class LaboratoryController {
         model.addAttribute("sortingTypes", sortingTypes);
         model.addAttribute("applications", applications);
         return "lab/application-list";
+    }
+
+
+    @PreAuthorize("hasRole('SCIENTIST')")
+    @GetMapping("/applications/{id}")
+    public String applicationDescription(@PathVariable Long id, Model model) {
+        model.addAttribute("appl", applicationService.getApplicationById(id));
+        //    model.addAttribute("applicationTypes", ApplicationType.getApplicationTypeLab());
+        return "lab/application-description";
+    }
+
+    @PreAuthorize("hasRole('SCIENTIST')")
+    @GetMapping("/applications/new")
+    public String applicationView(ScientistApplicationRequest scientistApplicationRequest, Model model) {
+        model.addAttribute("applicationTypes", ApplicationType.getApplicationTypeLab());
+        return "lab/create-application";
+    }
+
+    @PreAuthorize("hasRole('SCIENTIST')")
+    @PostMapping("/applications/new")
+    public String createExperiment(@Valid ScientistApplicationRequest request,
+                                   Model model,
+                                   BindingResult result,
+                                   Principal principal) {
+        if (result.hasErrors()) {
+            model.addAttribute("applicationTypes", ApplicationType.getApplicationTypeLab());
+            //     model.addAttribute("applicationTypes", ApplicationType.values());
+            return "lab/create-application";
+        }
+        applicationService.createLabExperimentRequest(principal.getName(), request);
+        return "redirect:/lab/applications";
+    }
+
+    @PreAuthorize("hasRole('SCIENTIST')")
+    @GetMapping("subjects")
+    public String subjects(Model model, Principal principal) {
+        List<Subject> subjects = subjectRepository.findAll();
+        model.addAttribute("subjects", subjects);
+        return "lab/subject-list";
+    }
+
+    @PreAuthorize("hasRole('SCIENTIST')")
+    @GetMapping("/subject/new")
+    public String subjectsCreationView(SubjectCreationRequest subjectCreationRequest, Model model) {
+        return "lab/create-subject";
+    }
+
+    @PreAuthorize("hasRole('SCIENTIST')")
+    @PostMapping("/subject/new")
+    public String createSubjects(@Valid SubjectCreationRequest request,
+                                 BindingResult result,
+                                 Model model) {
+        if (result.hasErrors()) {
+            return "lab/create-subject";
+        }
+        subjectService.addSubject(request);
+        return "redirect:/lab/subjects";
+    }
+
+    @PreAuthorize("hasRole('SCIENTIST')")
+    @GetMapping("experiments")
+    public String experiments(Model model, Principal principal) {
+        List<Experiment> experiments = experimentRepository.findAll();
+        model.addAttribute("experiments", experiments);
+        return "lab/experiment-list";
+    }
+
+    @PreAuthorize("hasRole('SCIENTIST')")
+    @GetMapping("/experiment/new")
+    public String experimentCreationView(ExperimentCreateRequest experimentCreateRequest, Model model) {
+        return "lab/create-experiment";
+    }
+
+    @PreAuthorize("hasRole('SCIENTIST')")
+    @PostMapping("/experiment/new")
+    public String createExperiments(@Valid ExperimentCreateRequest request,
+                                    BindingResult result,
+                                    Model model) {
+        if (result.hasErrors()) {
+            return "lab/create-experiment";
+        }
+        experimentService.addExperiment(request);
+        return "redirect:/lab/experiments";
     }
 }
