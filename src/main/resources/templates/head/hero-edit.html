@@ -19,11 +19,23 @@
 <body>
 <div class="container mt-5 mb-5">
     <h3>Изменение данных героя</h3>
-    <form th:action="@{/head/employees/hero/{id}(id=${hero.getId()})}" class="form-inline my-2 my-lg-0" method="post">
-        <input class="form-control mr-sm-2" th:type="text" name="firstName" id = "firstName" th:value="${hero.getFirstName()}"/><br>
-        <input class="form-control mr-sm-2" th:type="text" name="lastName" id="lastName"  th:value="${hero.getLastName()}"/><br>
-        <input class="form-control mr-sm-2" th:type="text" name="nickname" id="nickname" th:value="${hero.getNickname() ?: ''}" placeholder="Прозвище"/><br>
-        <input class="form-control mr-sm-2" th:type="text" name="powerDescription" id="powerDescription" th:value="${hero.getPowerDescription() ?: ''}" placeholder="Описание способностей"/><br>
+    <form th:action="@{/head/employees/hero/{id}(id=${hero.getId()})}" class="form-inline my-2 my-lg-0" method="post" th:object="${heroUpdateRequest}">
+        <div class="form-group">
+            <input class="form-control mr-sm-2" th:type="text" th:field="*{firstName}" placeholder="Имя сотрудника"/><br>
+            <div class="alert alert-warning" th:if="${#fields.hasErrors('firstName')}"
+                 th:errors="*{firstName}"></div>
+        </div>
+        <div class="form-group">
+            <input class="form-control mr-sm-2" th:type="text" th:field="*{lastName}" placeholder="Фамилия сотрудника"/><br>
+            <div class="alert alert-warning" th:if="${#fields.hasErrors('lastName')}"
+                 th:errors="*{lastName}"></div>
+        </div>
+        <div class="form-group">
+            <input class="form-control mr-sm-2" th:type="text" th:field="*{nickname}" placeholder="Прозвище"/><br>
+        </div>
+        <div class="form-group">
+            <input class="form-control mr-sm-2" th:type="text" th:field="*{powerDescription}" placeholder="Описание способностей"/><br>
+        </div>
         <button type="submit" class="btn btn-outline-dark">Изменить</button>
     </form>
     <div class="btn-group d-flex vought-footer" role="group" aria-label="...">

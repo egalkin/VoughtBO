@@ -94,8 +94,12 @@ public class HeadController {
 
     @PreAuthorize("hasAnyRole('CEO', 'HEAD')")
     @GetMapping("/employees/{id}")
-    public String viewEmployee(@PathVariable("id") Long employeeId, Model model) {
+    public String viewEmployee(@PathVariable("id") Long employeeId,
+                               EmployeeUpdateRequest employeeUpdateRequest,
+                               Model model) {
         Employee employee = employeeService.findById(employeeId);
+        employeeUpdateRequest.setFirstName(employee.getFirstName());
+        employeeUpdateRequest.setLastName(employee.getLastName());
         model.addAttribute("employee", employee);
         return "head/employee-edit";
     }
@@ -103,15 +107,28 @@ public class HeadController {
     @PreAuthorize("hasAnyRole('CEO', 'HEAD')")
     @PostMapping("/employees/{id}")
     public String editEmployee(@PathVariable("id") Long employeeId,
-                               @ModelAttribute EmployeeUpdateRequest request) {
+                               @Valid EmployeeUpdateRequest request,
+                               BindingResult result,
+                               Model model) {
+        if (result.hasErrors()) {
+            Employee employee = employeeService.findById(employeeId);
+            model.addAttribute("employee", employee);
+            return "head/employee-edit";
+        }
         employeeService.editEmployee(employeeId, request);
         return "redirect:/head/employees";
     }
 
     @PreAuthorize("hasAnyRole('CEO', 'HEAD')")
     @GetMapping("/employees/hero/{id}")
-    public String viewHero(@PathVariable("id") Long employeeId, Model model) {
+    public String viewHero(@PathVariable("id") Long employeeId,
+                           HeroUpdateRequest heroUpdateRequest,
+                           Model model) {
         Employee hero = employeeService.findById(employeeId);
+        heroUpdateRequest.setFirstName(hero.getFirstName());
+        heroUpdateRequest.setLastName(hero.getLastName());
+        heroUpdateRequest.setNickname(hero.getNickname());
+        heroUpdateRequest.setPowerDescription(hero.getPowerDescription());
         model.addAttribute("hero", hero);
         return "head/hero-edit";
     }
@@ -119,8 +136,15 @@ public class HeadController {
     @PreAuthorize("hasAnyRole('CEO', 'HEAD')")
     @PostMapping("/employees/hero/{id}")
     public String editHero(@PathVariable("id") Long heroId,
-                           @ModelAttribute HeroUpdateRequest request) {
-       employeeService.editHero(heroId, request);
+                           @Valid HeroUpdateRequest request,
+                           BindingResult result,
+                           Model model) {
+        if (result.hasErrors()) {
+            Employee hero = employeeService.findById(heroId);
+            model.addAttribute("hero", hero);
+            return "head/hero-edit";
+        }
+        employeeService.editHero(heroId, request);
         return "redirect:/head/employees";
     }
 
