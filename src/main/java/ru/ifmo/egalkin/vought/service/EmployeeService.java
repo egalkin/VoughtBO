@@ -83,7 +83,7 @@ public class EmployeeService {
 
     @Transactional
     public void editHero(Long heroId, HeroUpdateRequest request) {
-        Employee hero = employeeRepository.getById(heroId);
+        Employee hero = employeeRepository.findById(heroId).get();
         boolean needToUpdateEmail = false;
         if (request.getFirstName() != null && !request.getFirstName().equals(hero.getFirstName())) {
             hero.setFirstName(request.getFirstName());

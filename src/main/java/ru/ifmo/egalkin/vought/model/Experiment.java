@@ -22,6 +22,9 @@ public class Experiment {
 
     private String goal;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "creator_id", nullable = false)
+    private Employee creator;
 
     @ManyToMany
     @JoinTable(
@@ -34,5 +37,13 @@ public class Experiment {
 
     @ManyToMany(mappedBy = "experiments")
     private Collection<Employee> participants;
+
+    public boolean notEmptyGoal() {
+        return goal != null && !goal.isEmpty();
+    }
+
+    public boolean notEmptyDescription() {
+        return description != null && !description.isEmpty();
+    }
 
 }

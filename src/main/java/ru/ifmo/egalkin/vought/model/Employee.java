@@ -59,6 +59,9 @@ public class Employee {
     @OneToMany(mappedBy = "creator")
     private Set<Event> createdEvents;
 
+    @OneToMany(mappedBy = "creator")
+    private Set<Experiment> createdExperiments;
+
 //    @OneToMany(mappedBy = "processor")
 //    private Set<Event> processedEvents;
 
@@ -119,6 +122,10 @@ public class Employee {
 
     public void addEvent(Event event) {
         this.events.add(event);
+    }
+
+    public void addExperiment(Experiment experiment) {
+        this.experiments.add(experiment);
     }
 
     public boolean isHero() {

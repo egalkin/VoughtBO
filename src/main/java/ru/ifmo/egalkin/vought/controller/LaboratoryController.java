@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.ifmo.egalkin.vought.controller.request.ExperimentCreateRequest;
+import ru.ifmo.egalkin.vought.controller.request.ExperimentUpdateRequest;
 import ru.ifmo.egalkin.vought.controller.request.ScientistApplicationRequest;
 import ru.ifmo.egalkin.vought.controller.request.SubjectCreationRequest;
 import ru.ifmo.egalkin.vought.model.Application;
@@ -15,7 +16,6 @@ import ru.ifmo.egalkin.vought.model.Experiment;
 import ru.ifmo.egalkin.vought.model.Subject;
 import ru.ifmo.egalkin.vought.model.enums.ApplicationSortingType;
 import ru.ifmo.egalkin.vought.model.enums.ApplicationType;
-import ru.ifmo.egalkin.vought.model.rrepository.ExperimentRepository;
 import ru.ifmo.egalkin.vought.model.rrepository.SubjectRepository;
 import ru.ifmo.egalkin.vought.service.ApplicationService;
 import ru.ifmo.egalkin.vought.service.ExperimentService;
@@ -48,9 +48,6 @@ public class LaboratoryController {
 
     @Autowired
     private SubjectRepository subjectRepository;
-
-    @Autowired
-    private ExperimentRepository experimentRepository;
 
     @Autowired
     private ExperimentService experimentService;
@@ -156,28 +153,55 @@ public class LaboratoryController {
     }
 
     @PreAuthorize("hasRole('SCIENTIST')")
-    @GetMapping("experiments")
+    @GetMapping("/experiments")
     public String experiments(Model model, Principal principal) {
-        List<Experiment> experiments = experimentRepository.findAll();
+        List<Experiment> experiments = experimentService.getEmployeeExperiments(principal.getName());
         model.addAttribute("experiments", experiments);
         return "lab/experiment-list";
     }
 
     @PreAuthorize("hasRole('SCIENTIST')")
+    @GetMapping("/experiments/{id}")
+    public String viewExperiment(@PathVariable("id") Long experimentId,
+                                 ExperimentUpdateRequest request,
+                                 Model model) {
+        Experiment experiment = experimentService.findById(experimentId);
+        request.setGoal(experiment.getGoal());
+        request.setDescription(experiment.getDescription());
+        model.addAttribute("exp", experiment);
+        return "lab/experiment";
+    }
+
+    @PreAuthorize("hasRole('SCIENTIST')")
+    @PostMapping("/experiments/{id}")
+    public String editExperiment(@PathVariable("id") Long experimentId,
+                                 @Valid ExperimentUpdateRequest request,
+                                 BindingResult result,
+                                 Model model) {
+        if (result.hasErrors()) {
+            Experiment experiment = experimentService.findById(experimentId);
+            model.addAttribute("exp", experiment);
+            return "lab/experiment";
+        }
+        experimentService.editExperiment(experimentId, request);
+        return "redirect:/lab/experiments";
+    }
+
+    @PreAuthorize("hasRole('SCIENTIST')")
     @GetMapping("/experiment/new")
-    public String experimentCreationView(ExperimentCreateRequest experimentCreateRequest, Model model) {
+    public String addExperimentView(ExperimentCreateRequest experimentCreateRequest, Model model) {
         return "lab/create-experiment";
     }
 
     @PreAuthorize("hasRole('SCIENTIST')")
     @PostMapping("/experiment/new")
-    public String createExperiments(@Valid ExperimentCreateRequest request,
-                                    BindingResult result,
-                                    Model model) {
+    public String addExperiment(@Valid ExperimentCreateRequest request,
+                                BindingResult result,
+                                Principal principal) {
         if (result.hasErrors()) {
             return "lab/create-experiment";
         }
-        experimentService.addExperiment(request);
+        experimentService.addExperiment(principal.getName(), request);
         return "redirect:/lab/experiments";
     }
 }
