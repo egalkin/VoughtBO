@@ -49,6 +49,11 @@ public class EmployeeService {
         return employeeRepository.findAllByDepartment(department);
     }
 
+    public List<Employee> findAllPossibleExperimentMembers(Department department,
+                                                           List<Long> ids) {
+        return employeeRepository.findAllByDepartmentAndIdNotIn(department, ids);
+    }
+
     public List<Employee> findUnwardedHeroes() {
         return employeeRepository.findUnwardedHeroes();
     }
@@ -59,6 +64,10 @@ public class EmployeeService {
 
     public void save(Employee employee) {
         employeeRepository.save(employee);
+    }
+
+    public void saveAll(List<Employee> employees) {
+        employeeRepository.saveAll(employees);
     }
 
     @Transactional
@@ -129,11 +138,11 @@ public class EmployeeService {
     public void wardHeroes(String prManagerEmail, List<Long> wardsIds) {
         Employee prManager = employeeRepository.findByEmail(prManagerEmail);
         List<Employee> warderHeroes = employeeRepository.findAllById(wardsIds);
-        for (Employee hero : warderHeroes) {
+        warderHeroes.forEach(hero -> {
             hero.setPrManager(prManager);
             prManager.addWard(hero);
             employeeRepository.save(hero);
-        }
+        });
         employeeRepository.save(prManager);
     }
 

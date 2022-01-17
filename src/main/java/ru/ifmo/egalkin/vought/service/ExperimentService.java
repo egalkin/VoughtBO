@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.ifmo.egalkin.vought.controller.request.ExperimentCreateRequest;
 import ru.ifmo.egalkin.vought.controller.request.ExperimentUpdateRequest;
-import ru.ifmo.egalkin.vought.controller.request.SubjectCreationRequest;
 import ru.ifmo.egalkin.vought.model.Employee;
 import ru.ifmo.egalkin.vought.model.Experiment;
 import ru.ifmo.egalkin.vought.model.Subject;
@@ -13,13 +12,15 @@ import ru.ifmo.egalkin.vought.model.rrepository.ExperimentRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ExperimentService {
 
     @Autowired
     private EmployeeService employeeService;
+
+    @Autowired
+    private SubjectService subjectService;
 
     @Autowired
     private ExperimentRepository experimentRepository;
@@ -57,5 +58,25 @@ public class ExperimentService {
             experiment.setDescription(request.getDescription());
         }
         experimentRepository.save(experiment);
+    }
+
+    @Transactional
+    public void addMembersToExperiment(Long experimentId, List<Long> membersIds) {
+        Experiment experiment = experimentRepository.findById(experimentId).get();
+        List<Employee> newMembers = employeeService.findAllById(membersIds);
+        newMembers.forEach(scientist -> {
+            scientist.addExperiment(experiment);
+        });
+        employeeService.saveAll(newMembers);
+    }
+
+    @Transactional
+    public void addSubjectsToExperiment(Long experimentId, List<Long> subjectIds) {
+        Experiment experiment = experimentRepository.findById(experimentId).get();
+        List<Subject> newSubjects = subjectService.findAllById(subjectIds);
+        newSubjects.forEach(subjects -> {
+            subjects.addExperiment(experiment);
+        });
+        subjectService.saveAll(newSubjects);
     }
 }

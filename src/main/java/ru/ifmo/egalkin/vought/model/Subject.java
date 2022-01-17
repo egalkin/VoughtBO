@@ -3,6 +3,7 @@ package ru.ifmo.egalkin.vought.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
@@ -20,7 +21,28 @@ public class Subject {
     @Column(nullable = false)
     private String nickname;
 
-    @ManyToMany(mappedBy = "subjects")
-    private Collection<Experiment> experiments;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "mentor_id", nullable = false)
+    private Employee mentor;
+
+    @ManyToMany
+    @JoinTable(
+            name="subject_experiments",
+            joinColumns = @JoinColumn(
+                    name = "subject_id", referencedColumnName = "id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "experiment_id", referencedColumnName = "id"
+            )
+    )
+    private Collection<Experiment> experiments = new ArrayList<>();
+
+    public String getFullName() {
+        return String.format("Объект №%d: %s", id, nickname);
+    }
+
+    public void addExperiment(Experiment experiment) {
+        this.experiments.add(experiment);
+    }
 
 }

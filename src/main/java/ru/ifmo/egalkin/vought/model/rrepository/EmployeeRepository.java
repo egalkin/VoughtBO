@@ -24,6 +24,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     List<Employee> findAllByDepartment(Department department);
 
+    List<Employee> findAllByDepartmentAndIdNotIn(Department department, List<Long> ids);
+
 
 
 }

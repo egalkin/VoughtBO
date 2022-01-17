@@ -36,10 +36,10 @@ public class EventService {
                 .build();
         eventRepository.save(event);
         List<Employee> heroes = employeeService.findAllById(request.getHeroesIds());
-        for (Employee hero : heroes) {
+        heroes.forEach(hero -> {
             hero.addEvent(event);
             employeeService.save(hero);
-        }
+        });
     }
 
     @Transactional

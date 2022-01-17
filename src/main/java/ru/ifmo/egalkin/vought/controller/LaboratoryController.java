@@ -11,13 +11,17 @@ import ru.ifmo.egalkin.vought.controller.request.ExperimentCreateRequest;
 import ru.ifmo.egalkin.vought.controller.request.ExperimentUpdateRequest;
 import ru.ifmo.egalkin.vought.controller.request.ScientistApplicationRequest;
 import ru.ifmo.egalkin.vought.controller.request.SubjectCreationRequest;
+import ru.ifmo.egalkin.vought.controller.request.SubjectUpdateRequest;
 import ru.ifmo.egalkin.vought.model.Application;
+import ru.ifmo.egalkin.vought.model.Employee;
 import ru.ifmo.egalkin.vought.model.Experiment;
 import ru.ifmo.egalkin.vought.model.Subject;
 import ru.ifmo.egalkin.vought.model.enums.ApplicationSortingType;
 import ru.ifmo.egalkin.vought.model.enums.ApplicationType;
+import ru.ifmo.egalkin.vought.model.enums.Department;
 import ru.ifmo.egalkin.vought.model.rrepository.SubjectRepository;
 import ru.ifmo.egalkin.vought.service.ApplicationService;
+import ru.ifmo.egalkin.vought.service.EmployeeService;
 import ru.ifmo.egalkin.vought.service.ExperimentService;
 import ru.ifmo.egalkin.vought.service.SubjectService;
 
@@ -30,6 +34,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Controller
 @RequestMapping("/lab")
@@ -44,10 +49,10 @@ public class LaboratoryController {
     private ApplicationService applicationService;
 
     @Autowired
-    private SubjectService subjectService;
+    private EmployeeService employeeService;
 
     @Autowired
-    private SubjectRepository subjectRepository;
+    private SubjectService subjectService;
 
     @Autowired
     private ExperimentService experimentService;
@@ -129,7 +134,13 @@ public class LaboratoryController {
     @PreAuthorize("hasRole('SCIENTIST')")
     @GetMapping("subjects")
     public String subjects(Model model, Principal principal) {
-        List<Subject> subjects = subjectRepository.findAll();
+        Employee scientist = employeeService.findByEmail(principal.getName());
+        List<Subject> subjects = Stream.concat(
+                scientist.getMentoredSubjects().stream(),
+                scientist.getExperiments()
+                        .stream()
+                        .flatMap(exp -> exp.getSubjects().stream())
+        ).distinct().collect(Collectors.toList());
         model.addAttribute("subjects", subjects);
         return "lab/subject-list";
     }
@@ -144,11 +155,44 @@ public class LaboratoryController {
     @PostMapping("/subject/new")
     public String createSubjects(@Valid SubjectCreationRequest request,
                                  BindingResult result,
-                                 Model model) {
+                                 Principal principal) {
         if (result.hasErrors()) {
             return "lab/create-subject";
         }
-        subjectService.addSubject(request);
+        subjectService.addSubject(principal.getName(), request);
+        return "redirect:/lab/subjects";
+    }
+
+    @PreAuthorize("hasRole('SCIENTIST')")
+    @GetMapping("/subjects/{id}")
+    public String viewSubject(@PathVariable("id") Long subjectId,
+                              SubjectUpdateRequest request,
+                              Model model,
+                              Principal principal) {
+        Subject subject = subjectService.findById(subjectId);
+        Employee scientist = employeeService.findByEmail(principal.getName());
+        request.setNickname(subject.getNickname());
+        model.addAttribute("sbj", subject);
+        model.addAttribute(
+                "currentUserIsMentor",
+                subject.getMentor().getId().equals(scientist.getId())
+        );
+        return "lab/subject";
+    }
+
+
+    @PreAuthorize("hasRole('SCIENTIST')")
+    @PostMapping("/subjects/{id}")
+    public String editExperiment(@PathVariable("id") Long subjectId,
+                                 @Valid SubjectUpdateRequest request,
+                                 BindingResult result,
+                                 Model model) {
+        if (result.hasErrors()) {
+            Subject subject = subjectService.findById(subjectId);
+            model.addAttribute("sbj", subject);
+            return "lab/subject";
+        }
+        subjectService.editSubject(subjectId, request);
         return "redirect:/lab/subjects";
     }
 
@@ -164,11 +208,17 @@ public class LaboratoryController {
     @GetMapping("/experiments/{id}")
     public String viewExperiment(@PathVariable("id") Long experimentId,
                                  ExperimentUpdateRequest request,
-                                 Model model) {
+                                 Model model,
+                                 Principal principal) {
         Experiment experiment = experimentService.findById(experimentId);
+        Employee scientist = employeeService.findByEmail(principal.getName());
         request.setGoal(experiment.getGoal());
         request.setDescription(experiment.getDescription());
         model.addAttribute("exp", experiment);
+        model.addAttribute(
+                "currentUserIsCreator",
+                experiment.getCreator().getId().equals(scientist.getId())
+        );
         return "lab/experiment";
     }
 
@@ -184,6 +234,52 @@ public class LaboratoryController {
             return "lab/experiment";
         }
         experimentService.editExperiment(experimentId, request);
+        return "redirect:/lab/experiments";
+    }
+
+    @PreAuthorize("hasRole('SCIENTIST')")
+    @GetMapping("/experiments/{id}/members/add")
+    public String addExperimentMembersView(@PathVariable("id") Long experimentId,
+                                           Model model,
+                                           Principal principal) {
+        Experiment experiment = experimentService.findById(experimentId);
+        Employee scientist = employeeService.findByEmail(principal.getName());
+        List<Employee> possibleMembers = employeeService.findAllPossibleExperimentMembers(
+                        Department.LABORATORY,
+                        List.of(scientist.getId())
+                )
+                .stream()
+                .filter(emp -> !emp.getExperiments().contains(experiment))
+                .collect(Collectors.toList());
+        model.addAttribute("exp", experiment);
+        model.addAttribute("possibleMembers", possibleMembers);
+        return "lab/add-members";
+    }
+
+    @PreAuthorize("hasRole('SCIENTIST')")
+    @PostMapping("/experiments/{id}/members/add")
+    public String addExperimentMembers(@PathVariable("id") Long experimentId,
+                                       @RequestParam List<Long> membersIds) {
+        experimentService.addMembersToExperiment(experimentId, membersIds);
+        return "redirect:/lab/experiments";
+    }
+
+    @PreAuthorize("hasRole('SCIENTIST')")
+    @GetMapping("/experiments/{id}/subjects/add")
+    public String addExperimentSubjectsView(@PathVariable("id") Long experimentId,
+                                            Model model) {
+        Experiment experiment = experimentService.findById(experimentId);
+        List<Subject> possibleSubjects = subjectService.findAllPossibleExperimentSubjects(experimentId);
+        model.addAttribute("exp", experiment);
+        model.addAttribute("possibleSubjects", possibleSubjects);
+        return "lab/add-subjects";
+    }
+
+    @PreAuthorize("hasRole('SCIENTIST')")
+    @PostMapping("/experiments/{id}/subjects/add")
+    public String addExperimentSubjects(@PathVariable("id") Long experimentId,
+                                        @RequestParam List<Long> subjectsIds) {
+        experimentService.addSubjectsToExperiment(experimentId, subjectsIds);
         return "redirect:/lab/experiments";
     }
 

@@ -26,17 +26,11 @@ public class Experiment {
     @JoinColumn(name = "creator_id", nullable = false)
     private Employee creator;
 
-    @ManyToMany
-    @JoinTable(
-            name = "subject_experiments",
-            joinColumns = @JoinColumn(
-                    name = "experiment_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(
-                    name = "subject_id", referencedColumnName = "id"))
+    @ManyToMany(mappedBy = "experiments")
     private Collection<Subject> subjects;
 
     @ManyToMany(mappedBy = "experiments")
-    private Collection<Employee> participants;
+    private Collection<Employee> members;
 
     public boolean notEmptyGoal() {
         return goal != null && !goal.isEmpty();

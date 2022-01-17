@@ -31,19 +31,20 @@
     </div>
     <table class="table hover-table application-table">
       <tbody>
-      <tr th:each="el : ${subjects}" class="clickable-row hover-tr" th:href="@{/lab/subjects/{id}(id=${el.id})}">
+      <tr th:each="el : ${subjects}" class="clickable-row hover-tr" th:href="@{/lab/subjects/{id}(id=${el.getId()})}">
         <td class="text-center">
           <div class="table-center">
-            <label  ><strong>Никнейм</strong></label>
-            <p  th:text="${el.getNickname()}"></p>
+            <label><strong>Подопечный</strong></label>
+            <p  th:text="${el.getFullName()}"></p>
           </div>
         </td>
       </tr>
       </tbody>
     </table>
     <div class="btn-group d-flex vought-footer" role="group" aria-label="...">
-      <a href="/lab/home" class="btn btn-default w-100">Лаборатория</a>
-      <a href="/lab/applications" class="btn btn-default w-100 chosen-button">Заявки</a>
+      <a href="/lab/experiments" class="btn btn-default w-100">Эксперименты</a>
+      <a href="/lab/subjects" class="btn btn-default w-100 chosen-button">Подопечные</a>
+      <a href="/lab/applications" class="btn btn-default w-100">Заявки</a>
     </div>
   </section>
 </div>

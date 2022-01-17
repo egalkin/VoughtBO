@@ -62,8 +62,8 @@ public class Employee {
     @OneToMany(mappedBy = "creator")
     private Set<Experiment> createdExperiments;
 
-//    @OneToMany(mappedBy = "processor")
-//    private Set<Event> processedEvents;
+    @OneToMany(mappedBy = "mentor")
+    private Set<Subject> mentoredSubjects;
 
     @OneToMany(mappedBy = "meetingAimEmployee")
     private Set<Application> meetingRequests;

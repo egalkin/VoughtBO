@@ -53,6 +53,14 @@
                 <button class="btn btn-outline-dark grid-button" type="submit">Обновить</button>
             </div>
         </form>
+        <div class = "application-buttons">
+            <form th:action="@{/lab/experiments/{id}/members/add(id=${exp.getId()})}" method="get" th:if="${currentUserIsCreator}">
+                <button type="submit" class="btn btn-outline-dark">Добавить ученых</button>
+            </form>
+            <form th:action="@{/lab/experiments/{id}/subjects/add(id=${exp.getId()})}" method="get" th:if="${currentUserIsCreator}">
+                <button type="submit" class="btn btn-outline-dark">Добавить подопечных</button>
+            </form>
+        </div>
         <div class="btn-group d-flex vought-footer" role="group" aria-label="...">
             <a href="/lab/experiments" class="btn btn-default w-100 chosen-button">Эксперименты</a>
             <a href="/lab/subjects" class="btn btn-default w-100">Подопечные</a>
