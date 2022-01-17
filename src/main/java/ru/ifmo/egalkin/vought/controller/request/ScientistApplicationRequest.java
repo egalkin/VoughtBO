@@ -17,6 +17,4 @@ public class ScientistApplicationRequest {
     private String name;
     ApplicationType applicationType;
     private String description;
-
-    private String goal;
 }

@@ -19,7 +19,6 @@ import ru.ifmo.egalkin.vought.model.Subject;
 import ru.ifmo.egalkin.vought.model.enums.ApplicationSortingType;
 import ru.ifmo.egalkin.vought.model.enums.ApplicationType;
 import ru.ifmo.egalkin.vought.model.enums.Department;
-import ru.ifmo.egalkin.vought.model.rrepository.SubjectRepository;
 import ru.ifmo.egalkin.vought.service.ApplicationService;
 import ru.ifmo.egalkin.vought.service.EmployeeService;
 import ru.ifmo.egalkin.vought.service.ExperimentService;
@@ -105,26 +104,24 @@ public class LaboratoryController {
     @GetMapping("/applications/{id}")
     public String applicationDescription(@PathVariable Long id, Model model) {
         model.addAttribute("appl", applicationService.getApplicationById(id));
-        //    model.addAttribute("applicationTypes", ApplicationType.getApplicationTypeLab());
         return "lab/application-description";
     }
 
     @PreAuthorize("hasRole('SCIENTIST')")
     @GetMapping("/applications/new")
     public String applicationView(ScientistApplicationRequest scientistApplicationRequest, Model model) {
-        model.addAttribute("applicationTypes", ApplicationType.getApplicationTypeLab());
+        model.addAttribute("applicationTypes", ApplicationType.getLabApplicationType());
         return "lab/create-application";
     }
 
     @PreAuthorize("hasRole('SCIENTIST')")
     @PostMapping("/applications/new")
-    public String createExperiment(@Valid ScientistApplicationRequest request,
-                                   Model model,
-                                   BindingResult result,
-                                   Principal principal) {
+    public String createApplication(@Valid ScientistApplicationRequest request,
+                                    BindingResult result,
+                                    Model model,
+                                    Principal principal) {
         if (result.hasErrors()) {
-            model.addAttribute("applicationTypes", ApplicationType.getApplicationTypeLab());
-            //     model.addAttribute("applicationTypes", ApplicationType.values());
+            model.addAttribute("applicationTypes", ApplicationType.getLabApplicationType());
             return "lab/create-application";
         }
         applicationService.createScientistRequest(principal.getName(), request);

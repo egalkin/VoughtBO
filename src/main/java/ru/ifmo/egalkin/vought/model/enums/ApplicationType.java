@@ -25,7 +25,7 @@ public enum ApplicationType {
         return description;
     }
 
-    public static ApplicationType[] getApplicationTypeLab() {
+    public static ApplicationType[] getLabApplicationType() {
 
         return new ApplicationType[]{RESEARCH, EQUIPMENT};
     }
