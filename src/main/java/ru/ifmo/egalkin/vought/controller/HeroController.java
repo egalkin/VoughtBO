@@ -150,6 +150,17 @@ public class HeroController {
     }
 
     @PreAuthorize("hasRole('HERO')")
+    @GetMapping("/incidents/{id}")
+    public String incidentView(@PathVariable("id") Long incidentId,
+                              Model model) {
+        Incident activeIncident = incidentService.findFirstByActive(true);
+        Incident incident = incidentService.findById(incidentId);
+        model.addAttribute("anyIncident", activeIncident != null);
+        model.addAttribute("inc", incident);
+        return "hero/incident-description";
+    }
+
+    @PreAuthorize("hasRole('HERO')")
     @PostMapping("/incidents/{id}/react")
     public String reactOnIncident(@PathVariable("id") Long incidentId) {
         incidentService.reactOnIncident(incidentId);

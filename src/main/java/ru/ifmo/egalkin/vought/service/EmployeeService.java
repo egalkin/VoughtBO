@@ -57,6 +57,10 @@ public class EmployeeService {
         return employeeRepository.findAllByDepartmentAndIdNotIn(department, ids);
     }
 
+    public Integer countActiveHeroes() {
+        return employeeRepository.countAllByDepartment(Department.HERO);
+    }
+
     public List<Employee> findUnwardedHeroes() {
         return employeeRepository.findUnwardedHeroes();
     }
