@@ -1,6 +1,7 @@
 package ru.ifmo.egalkin.vought.model;
 
 import lombok.*;
+import org.hibernate.annotations.Where;
 import ru.ifmo.egalkin.vought.model.enums.Department;
 
 import javax.persistence.*;
@@ -19,11 +20,15 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Where(clause = "active = true")
 public class Employee {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(nullable = false)
+    private boolean active = true;
 
     @Column(nullable = false)
     private String firstName;
@@ -139,4 +144,13 @@ public class Employee {
     public String getAvatarFileName() {
         return this.department.toString().toLowerCase() + "-avatar.png";
     }
+
+    @PreRemove
+    public void preRemove() {
+        if (this.prManager != null) {
+            this.prManager.wards.remove(this);
+        }
+
+    }
+
 }

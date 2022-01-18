@@ -41,8 +41,11 @@ public class EmployeeService {
         return employeeRepository.findById(id).get();
     }
 
-    public void deleteById(Long id) {
-        employeeRepository.deleteById(id);
+    @Transactional
+    public void deactivate(Long id) {
+        Employee employee = employeeRepository.findById(id).get();
+        employee.setActive(false);
+        employeeRepository.save(employee);
     }
 
     public List<Employee> findAllByDepartment(Department department) {

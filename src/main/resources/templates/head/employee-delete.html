@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/template.css}"/>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/head/home">Vought Head Subsystem</a>
+        </div>
+        <form th:action="@{/logout}" method="post">
+            <input type="submit" class="btn btn-light" value="Выйти"/>
+        </form>
+    </nav>
+</head>
+<body>
+<div class="container mt-5 mb-5">
+
+    <div class="contain">
+        <div class="template-header">
+            <H1>Вы действительно хотите удалить сотрудника?</H1>
+        </div>
+        <div class = "application-buttons">
+            <form th:action="@{/head/employees/{id}/delete(id=${employee.getId()})}" method="post">
+                <button type="submit" class="btn btn-outline-dark">Да</button>
+            </form>
+            <form th:action="@{/head/employees/{id}(id=${employee.getId()})}" method="get">
+                <button type="submit" class="btn btn-outline-dark">Нет</button>
+            </form>
+        </div>
+        <div class="btn-group d-flex vought-footer" role="group" aria-label="...">
+            <a href="/head/employees" class="btn btn-default w-100 chosen-button">Персонал</a>
+            <a class="btn btn-default w-100">Просмотр состояния</a>
+            <a href="/head/applications" class="btn btn-default w-100">Заявки</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

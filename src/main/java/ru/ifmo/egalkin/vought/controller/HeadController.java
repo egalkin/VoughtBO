@@ -121,10 +121,10 @@ public class HeadController {
 
     @PreAuthorize("hasAnyRole('CEO', 'HEAD')")
     @GetMapping("/employees/hero/{id}")
-    public String viewHero(@PathVariable("id") Long employeeId,
+    public String viewHero(@PathVariable("id") Long heroId,
                            HeroUpdateRequest heroUpdateRequest,
                            Model model) {
-        Employee hero = employeeService.findById(employeeId);
+        Employee hero = employeeService.findById(heroId);
         heroUpdateRequest.setFirstName(hero.getFirstName());
         heroUpdateRequest.setLastName(hero.getLastName());
         heroUpdateRequest.setNickname(hero.getNickname());
@@ -148,11 +148,19 @@ public class HeadController {
         return "redirect:/head/employees";
     }
 
+    @PreAuthorize("hasAnyRole('CEO', 'HEAD')")
+    @GetMapping("/employees/{id}/delete")
+    public String deleteEmployeeView(@PathVariable("id") Long employeeId,
+                                     Model model) {
+        Employee employee = employeeService.findById(employeeId);
+        model.addAttribute("employee", employee);
+        return "head/employee-delete";
+    }
 
     @PreAuthorize("hasAnyRole('CEO', 'HEAD')")
-    @PostMapping("/employees/delete/{id}")
+    @PostMapping("/employees/{id}/delete")
     public String deleteEmployee(@PathVariable("id") Long employeeId) {
-        employeeService.deleteById(employeeId);
+        employeeService.deactivate(employeeId);
         return "redirect:/head/employees";
     }
 

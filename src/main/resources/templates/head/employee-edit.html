@@ -33,6 +33,9 @@
         </div>
         <button type="submit" class="btn btn-outline-dark">Изменить</button>
     </form>
+    <form class="delete-employee-form" th:action="@{/head/employees/{id}/delete(id=${employee.getId()})}" method="get">
+        <button type="submit" class="btn btn-outline-dark">Удалить</button>
+    </form>
     <div class="btn-group d-flex vought-footer" role="group" aria-label="...">
         <a href="/head/employees" class="btn btn-default w-100 chosen-button">Персонал</a>
         <a class="btn btn-default w-100">Просмотр состояния</a>
