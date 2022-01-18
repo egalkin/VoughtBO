@@ -27,6 +27,7 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Builder.Default
     @Column(nullable = false)
     private boolean active = true;
 
