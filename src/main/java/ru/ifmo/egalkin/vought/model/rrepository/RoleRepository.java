@@ -8,6 +8,5 @@ import ru.ifmo.egalkin.vought.model.Role;
  * Date: 12.10.2021
  */
 public interface RoleRepository extends JpaRepository<Role, Long> {
-
     Role findByName(String name);
 }

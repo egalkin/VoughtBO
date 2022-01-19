@@ -1,10 +1,6 @@
 package ru.ifmo.egalkin.vought.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import ru.ifmo.egalkin.vought.model.enums.ApplicationStatus;
 import ru.ifmo.egalkin.vought.model.enums.ApplicationType;
 
