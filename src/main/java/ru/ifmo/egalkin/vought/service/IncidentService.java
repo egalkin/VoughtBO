@@ -22,8 +22,20 @@ public class IncidentService {
         return incidentRepository.findFirstByActive(active);
     }
 
+    public Integer getActiveIncidentsNumber() {
+        return incidentRepository.countAllByActive(true);
+    }
+
     public List<Incident> findAllByActive(Boolean active) {
         return incidentRepository.findAllByActive(active);
+    }
+
+    public List<Incident> findAll() {
+        return incidentRepository.findAll();
+    }
+
+    public Incident findById(Long id) {
+        return incidentRepository.findById(id).get();
     }
 
     @Transactional

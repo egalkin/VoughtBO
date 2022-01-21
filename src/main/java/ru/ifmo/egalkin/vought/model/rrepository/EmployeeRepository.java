@@ -27,6 +27,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     @Query("SELECT emp from Employee emp where emp.prManager IS NULL AND emp.department = 'HERO'")
     List<Employee> findUnwardedHeroes();
 
+    Integer countAllByDepartment(Department department);
+
     List<Employee> findAllByDepartment(Department department);
 
     List<Employee> findAllByDepartmentAndIdNotIn(Department department, List<Long> ids);

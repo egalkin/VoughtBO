@@ -7,20 +7,25 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.model.IModel;
 import ru.ifmo.egalkin.vought.controller.request.EmployeeCreationRequest;
 import ru.ifmo.egalkin.vought.controller.request.EmployeeUpdateRequest;
 import ru.ifmo.egalkin.vought.controller.request.HeroUpdateRequest;
 import ru.ifmo.egalkin.vought.controller.request.ApplicationRejectionRequest;
 import ru.ifmo.egalkin.vought.model.Application;
 import ru.ifmo.egalkin.vought.model.Event;
+import ru.ifmo.egalkin.vought.model.Incident;
 import ru.ifmo.egalkin.vought.model.enums.ApplicationSortingType;
 import ru.ifmo.egalkin.vought.model.enums.Department;
 import ru.ifmo.egalkin.vought.model.Employee;
 import ru.ifmo.egalkin.vought.model.enums.EmployeeSortingType;
 import ru.ifmo.egalkin.vought.model.enums.EventAggregationType;
+import ru.ifmo.egalkin.vought.sensors.SensorHandler;
+import ru.ifmo.egalkin.vought.sensors.model.SensorData;
 import ru.ifmo.egalkin.vought.service.EmployeeService;
 import ru.ifmo.egalkin.vought.service.ApplicationService;
 import ru.ifmo.egalkin.vought.service.EventService;
+import ru.ifmo.egalkin.vought.service.IncidentService;
 
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
@@ -45,6 +50,10 @@ public class HeadController {
     private ApplicationService applicationService;
     @Autowired
     private EventService eventService;
+    @Autowired
+    private IncidentService incidentService;
+    @Autowired
+    private SensorHandler sensorHandler;
 
 
     @PreAuthorize("hasAnyRole('CEO', 'HEAD')")
@@ -121,10 +130,10 @@ public class HeadController {
 
     @PreAuthorize("hasAnyRole('CEO', 'HEAD')")
     @GetMapping("/employees/hero/{id}")
-    public String viewHero(@PathVariable("id") Long employeeId,
+    public String viewHero(@PathVariable("id") Long heroId,
                            HeroUpdateRequest heroUpdateRequest,
                            Model model) {
-        Employee hero = employeeService.findById(employeeId);
+        Employee hero = employeeService.findById(heroId);
         heroUpdateRequest.setFirstName(hero.getFirstName());
         heroUpdateRequest.setLastName(hero.getLastName());
         heroUpdateRequest.setNickname(hero.getNickname());
@@ -148,11 +157,19 @@ public class HeadController {
         return "redirect:/head/employees";
     }
 
+    @PreAuthorize("hasAnyRole('CEO', 'HEAD')")
+    @GetMapping("/employees/{id}/delete")
+    public String deleteEmployeeView(@PathVariable("id") Long employeeId,
+                                     Model model) {
+        Employee employee = employeeService.findById(employeeId);
+        model.addAttribute("employee", employee);
+        return "head/employee-delete";
+    }
 
     @PreAuthorize("hasAnyRole('CEO', 'HEAD')")
-    @PostMapping("/employees/delete/{id}")
+    @PostMapping("/employees/{id}/delete")
     public String deleteEmployee(@PathVariable("id") Long employeeId) {
-        employeeService.deleteById(employeeId);
+        employeeService.deactivate(employeeId);
         return "redirect:/head/employees";
     }
 
@@ -265,6 +282,26 @@ public class HeadController {
         model.addAttribute("aggregationTypes", aggregationTypes);
         model.addAttribute("events", events);
         return "head/calendar";
+    }
+
+
+    @PreAuthorize("hasAnyRole('CEO', 'HEAD')")
+    @GetMapping("/sensors")
+    public String sensors(Model model) {
+        SensorData sensorData = sensorHandler.getSensorData();
+        List<Incident> incidents = incidentService.findAll();
+        model.addAttribute("sensor", sensorData);
+        model.addAttribute("incidents", incidents);
+        return "head/sensors";
+    }
+
+    @PreAuthorize("hasAnyRole('CEO', 'HEAD')")
+    @GetMapping("/sensors/incidents/{id}")
+    public String incidentView(@PathVariable("id") Long incidentId,
+                               Model model) {
+        Incident incident = incidentService.findById(incidentId);
+        model.addAttribute("inc", incident);
+        return "head/incident-description";
     }
 
 }

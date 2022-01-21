@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/grid-form.css}"/>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+            crossorigin="anonymous"></script>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/security/home">Vought Security Subsystem</a>
+        </div>
+        <form th:action="@{/logout}" method="post">
+            <input type="submit" class="btn btn-light" value="Выйти"/>
+        </form>
+    </nav>
+</head>
+<body>
+<div class="container mt-5 mb-5">
+
+    <div class="template-header">
+        <H1>Данные сенсоров</H1>
+    </div>
+
+    <section class="all-actual-information">
+        <table class="table hover-table application-table">
+            <tbody>
+            <tr>
+                <td class="text-center">
+                    <div class="table-center">
+                        <label><strong>Число сотрудников в офисе</strong></label>
+                        <p th:text="${sensor.getEmployeesInOffice()}"></p>
+                    </div>
+                </td>
+                <td class="text-center">
+                    <div class="table-center">
+                        <label><strong>Число активных происшествий</strong></label>
+                        <p th:text="${sensor.getActiveIncidents()}"></p>
+                    </div>
+                </td>
+                <td class="text-center">
+                    <div class="table-center">
+                        <label><strong>Уровень напряженности</strong></label>
+                        <p th:text="${sensor.getTensionLevel().getDescription()}"></p>
+                    </div>
+                </td>
+                <td class="text-center">
+                    <div class="table-center">
+                        <label><strong>Уровень защищенности</strong></label>
+                        <p th:text="${sensor.getProtectionLevel().getDescription()}"></p>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="btn-group d-flex vought-footer" role="group" aria-label="...">
+            <a href="/security/sensors" class="btn btn-default w-100 chosen-button">Мониторинг</a>
+            <a href="/security/incident/new" class="btn btn-default w-100">Создать происшествие</a>
+        </div>
+    </section>
+</div>
+</div>
+
+</body>
+</html>
