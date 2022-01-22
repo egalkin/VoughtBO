@@ -26,7 +26,7 @@ public class Experiment {
     @JoinColumn(name = "creator_id", nullable = false)
     private Employee creator;
 
-    @ManyToMany(mappedBy = "experiments")
+    @ManyToMany(mappedBy = "experiments", fetch = FetchType.EAGER)
     private Collection<Subject> subjects;
 
     @ManyToMany(mappedBy = "experiments")
