@@ -9,17 +9,6 @@ delete from event;
 delete from incident;
 delete from employee;
 
-
--- delete from application;
---
--- delete from employee_experiments;
---
---
--- delete from incident;
--- -- delete from subject_experiment;
---
---
---
 insert into employee(id, active, first_name, last_name, email, password, department) values
 (1, true, 'Эдгар', 'Свонс', 'edgar@vought.com', 'test', 'HEAD'),
 (2, true, 'Антонина', 'Свонс', 'ant@vought.com', 'test', 'LABORATORY'),
@@ -45,7 +34,5 @@ insert into subject(id, nickname, mentor_id) values
 insert into subject_experiments(subject_id, experiment_id) values
 (1, 1),
 (2, 1);
-
--- delete from subject where id=100;
 
 alter sequence hibernate_sequence restart with 100;

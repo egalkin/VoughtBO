@@ -21,5 +21,5 @@ insert into employees_roles(employee_id, role_id) values
 (2, 6),
 (4, 3),
 (3, 4),
-(5, 5);                                                 ;
+(5, 5);
 

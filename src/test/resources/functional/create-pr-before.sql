@@ -19,7 +19,7 @@ insert into employees_roles(employee_id, role_id) values
 (1, 1),
 (2, 4),
 (4, 3),
-(3, 3);                                                 ;
+(3, 3);
 
 insert into application(id, application_status, application_type, description, meeting_time, name, reject_reason, update_date, creator_id, aim_id) values
 (1, 'APPROVED', 'PR_STRATEGY',  'Описание 1', '2022-01-27 13:54:00', 'Название 1', null, '2022-01-22', 2, 1);
