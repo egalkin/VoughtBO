@@ -33,8 +33,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource("/application-test.properties")
-@Sql(value = {"/create-pr-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(value = {"/create-pr-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(value = {"/functional/create-pr-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(value = {"/functional/create-pr-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @WithUserDetails(value = "vas@vought.com")
 public class PrControllerTest {
 
@@ -126,7 +126,7 @@ public class PrControllerTest {
     }
 
     @Test
-    public void createHeroApplicationsTest() throws Exception {
+    public void createPRApplicationsTest() throws Exception {
         this.mockMvc.perform(get("/pr/applications/new"))
                 .andDo(print())
                 .andExpect(authenticated())

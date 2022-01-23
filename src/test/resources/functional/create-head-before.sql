@@ -1,4 +1,8 @@
 delete from application;
+delete from subject_experiments;
+delete from employee_experiments;
+delete from subject;
+delete from experiment;
 delete from employees_roles;
 delete from employee_events;
 delete from event;
@@ -28,7 +32,7 @@ insert into employees_roles(employee_id, role_id) values
 (2, 6),
 (4, 3),
 (3, 4),
-(5, 5);                                                 ;
+(5, 5);
 
 insert into application(id, application_status, application_type, description, meeting_time, name, reject_reason, update_date, creator_id, aim_id) values
 (1, 'APPROVED', 'MEETING',  'Описание 1', '2022-01-27 13:54:00', 'Название 1', null, '2022-01-22', 3, 1),
