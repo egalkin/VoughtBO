@@ -53,9 +53,19 @@ public class SecurityControllerTest {
                 .andDo(print())
                 .andExpect(authenticated())
                 .andExpect(xpath("/html/body/div/div/H1").string("Данные сенсоров"))
+
                 .andExpect(xpath("/html/body/div/section/table/tbody/tr/td[2]/div/label/strong")
                         .string("Число активных происшествий"))
                 .andExpect(xpath("/html/body/div/section/table/tbody/tr/td[2]/div/p").string("1"))
+
+                .andExpect(xpath("/html/body/div/section/table/tbody/tr/td[3]/div/label/strong")
+                        .string("Уровень напряженности"))
+                .andExpect(xpath("/html/body/div/section/table/tbody/tr/td[3]/div/p").string("Низкий"))
+
+                .andExpect(xpath("/html/body/div/section/table/tbody/tr/td[4]/div/label/strong")
+                        .string("Уровень защищенности"))
+                .andExpect(xpath("/html/body/div/section/table/tbody/tr/td[4]/div/p").string("Низкий"))
+
                 .andExpect(status().isOk());
     }
 

@@ -64,6 +64,16 @@ public class HeadControllerTest {
     }
 
     @Test
+    public void employeePageTest() throws Exception {
+        String actualFirstName =  employeeRepository.findById(2L).get().getFirstName();
+        this.mockMvc.perform(get("/head/employees/hero/2"))
+                .andDo(print())
+                .andExpect(authenticated())
+                .andExpect(xpath("/html/body/div/form[1]/div[1]/input[@name='firstName']/@value").string(actualFirstName))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     public void editEmployeeTest() throws Exception {
         this.mockMvc.perform(get("/head/employees/hero/2"))
                 .andDo(print())
@@ -78,7 +88,6 @@ public class HeadControllerTest {
         Employee employee1 = employeeRepository.findById(id).get();
         assertEquals(employee1.getFirstName(), "Энни");
         assertNotEquals(employee.getFirstName(), employee1.getFirstName());
-
     }
 
     @Test

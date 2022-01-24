@@ -1,6 +1,7 @@
 package ru.ifmo.egalkin.vought.functional;
 
 
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -12,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -25,11 +27,20 @@ public class HomeControllerTest {
     private MockMvc mockMvc;
 
     @Test
+    @Order(1)
     public void accessDeniedTest() throws Exception {
         this.mockMvc.perform(get("/home"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("http://localhost/login"));
+    }
+
+    @Test
+    @Order(2)
+    void authErrorTest() throws Exception {
+        mockMvc
+                .perform(post("/login").param("edgar@vought.com", "wrong"))
+                .andExpect(redirectedUrl("/login?error"));
     }
 
     @Test
@@ -43,7 +54,7 @@ public class HomeControllerTest {
                 .andExpect(xpath("/html/body/div/section/div/a[2]").string("Просмотр состояния"))
                 .andExpect(xpath("/html/body/div/section/div/a[3]").string("Календарь"))
                 .andExpect(xpath("/html/body/div/section/div/a[4]").string("Заявки"))
-                .andExpect(status().isOk());;
+                .andExpect(status().isOk());
     }
 
     @Test

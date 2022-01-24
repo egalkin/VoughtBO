@@ -8,6 +8,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 import ru.ifmo.egalkin.vought.controller.request.*;
 import ru.ifmo.egalkin.vought.controller.request.dto.EventDateTimeDto;
 import ru.ifmo.egalkin.vought.model.Application;
@@ -104,7 +105,7 @@ public class PrControllerTest {
     }
 
     @Test
-    public void proApplicationsPageTest() throws Exception {
+    public void prApplicationsPageTest() throws Exception {
         this.mockMvc.perform(get("/pr/applications"))
                 .andDo(print())
                 .andExpect(authenticated())
