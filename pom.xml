@@ -10,7 +10,7 @@
     </parent>
     <groupId>ru.ifmo.egalkin</groupId>
     <artifactId>Vought</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+1    <version>1.0.0-SNAPSHOT</version>
     <name>VoughtBO</name>
     <description>VoughtBO</description>
     <properties>
