@@ -11,7 +11,7 @@ import ru.ifmo.egalkin.vought.model.Employee;
 import ru.ifmo.egalkin.vought.model.rrepository.RoleRepository;
 import ru.ifmo.egalkin.vought.model.rrepository.EmployeeRepository;
 
-import java.util.List;
+import java.util.Collections;
 
 /**
  * Created by egalkin
@@ -55,7 +55,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
             employee.setLastName("Свонс");
             employee.setPassword("test");
             employee.setEmail("edgar@vought.com");
-            employee.setRoles(List.of(adminRole));
+            employee.setRoles(Collections.singletonList(adminRole));
             employee.setDepartment(Department.HEAD);
             employeeRepository.save(employee);
         }

@@ -13,6 +13,7 @@ import ru.ifmo.egalkin.vought.model.rrepository.EmployeeRepository;
 import ru.ifmo.egalkin.vought.model.rrepository.RoleRepository;
 import ru.ifmo.egalkin.vought.utils.EmailUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 import static ru.ifmo.egalkin.vought.utils.TransliterateUtils.transliterate;
@@ -137,7 +138,7 @@ public class EmployeeService {
                 .build();
 
         Role role = roleRepository.findByName(employee.getDepartment().getCorrespondentRole());
-        employee.setRoles(List.of(role));
+        employee.setRoles(Collections.singletonList(role));
         employeeRepository.save(employee);
     }
 
