@@ -256,7 +256,10 @@ public class LaboratoryController {
     @PreAuthorize("hasRole('SCIENTIST')")
     @PostMapping("/experiments/{id}/members/add")
     public String addExperimentMembers(@PathVariable("id") Long experimentId,
-                                       @RequestParam List<Long> membersIds) {
+                                       @RequestParam @Nullable List<Long> membersIds) {
+        if (membersIds == null || membersIds.isEmpty()) {
+            return String.format("redirect:/lab/experiments/%d/members/add", experimentId);
+        }
         experimentService.addMembersToExperiment(experimentId, membersIds);
         return "redirect:/lab/experiments";
     }
@@ -275,7 +278,10 @@ public class LaboratoryController {
     @PreAuthorize("hasRole('SCIENTIST')")
     @PostMapping("/experiments/{id}/subjects/add")
     public String addExperimentSubjects(@PathVariable("id") Long experimentId,
-                                        @RequestParam List<Long> subjectsIds) {
+                                        @RequestParam @Nullable List<Long> subjectsIds) {
+        if (subjectsIds == null || subjectsIds.isEmpty()) {
+            return String.format("redirect:/lab/experiments/%d/subjects/add", experimentId);
+        }
         experimentService.addSubjectsToExperiment(experimentId, subjectsIds);
         return "redirect:/lab/experiments";
     }

@@ -8,6 +8,7 @@ import ru.ifmo.egalkin.vought.model.enums.IncidentType;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
@@ -17,6 +18,7 @@ public class IncidentCreationRequest {
     String address;
     IncidentType incidentType;
     Integer armamentLevel;
+    @NotNull(message = "Число преступников должно быть задано")
     @Min(value = 1, message = "Число преступников должно быть положительно")
     @Max(value = 1000000, message = "Число преступников слишком велико, мы не справимся")
     Integer enemiesNumber;

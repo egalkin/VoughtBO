@@ -45,7 +45,7 @@
                     <p class="table-center left-element" th:text="${el.getName()}"></p>
                 </td>
                 <td>
-                    <p th:utext="'<strong>С:</strong> ' + ${el.getMeetingAimEmployee().getFullName()}"></p>
+                    <p th:if="${el.getMeetingAimEmployee() != null}" th:utext="'<strong>С:</strong> ' + ${el.getMeetingAimEmployee().getFullName()}"></p>
                     <p th:utext="'<strong>Приоритет:</strong> ' + ${el.getPriority()}"></p>
                     <p th:utext="'<strong>Адрес:</strong> ' + ${el.getAddress()}"></p>
                 </td>

@@ -27,7 +27,7 @@
     <form th:action="@{/lab/experiments/{id}/members/add(id=${exp.getId()})}" class="form-inline my-2 my-lg-0" method="post">
         <div class="checkbox" th:each="candidate : ${possibleMembers}">
             <input type="checkbox" name="membersIds" th:value="${candidate.getId()}" />
-            <span class="primary" th:text="${candidate.getNickname()}"></span>
+            <span class="primary" th:text="${candidate.getFullName()}"></span>
         </div>
         <button class="btn btn-outline-dark" type="submit">Добавить участников</button>
     </form>
