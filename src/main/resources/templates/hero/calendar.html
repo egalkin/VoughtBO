@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <title>Календарь</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"/>
@@ -40,12 +41,12 @@
         </div>
         <table class="table hover-table application-table">
             <tbody>
-            <tr th:each="el : ${events}" class="clickable-row hover-tr">
+            <tr th:each="el : ${events}">
                 <td>
                     <p class="table-center left-element" th:text="${el.getName()}"></p>
                 </td>
                 <td>
-                    <p th:utext="'<strong>С:</strong> ' + ${el.getMeetingAimEmployee().getFullName()}"></p>
+                    <p th:if="${el.getMeetingAimEmployee() != null}" th:utext="'<strong>С:</strong> ' + ${el.getMeetingAimEmployee().getFullName()}"></p>
                     <p th:utext="'<strong>Приоритет:</strong> ' + ${el.getPriority()}"></p>
                     <p th:utext="'<strong>Адрес:</strong> ' + ${el.getAddress()}"></p>
                 </td>
