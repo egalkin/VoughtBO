@@ -55,7 +55,7 @@ public class Employee {
     @ManyToOne(fetch = FetchType.LAZY)
     private Employee prManager;
 
-    @OneToMany(mappedBy="creator")
+    @OneToMany(mappedBy="creator", fetch = FetchType.LAZY)
     private Set<Application> createdApplications;
 
     // Подопечные у PR мэнеджеров

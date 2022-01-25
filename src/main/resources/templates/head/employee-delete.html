@@ -3,7 +3,7 @@
 <head>
     <title>Удаление сотрудника</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <link rel="stylesheet" type="text/css" th:href="@{/css/template.css}"/>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
@@ -26,10 +26,10 @@
         </div>
         <div class = "application-buttons">
             <form th:action="@{/head/employees/{id}/delete(id=${employee.getId()})}" method="post">
-                <button type="submit" class="btn btn-outline-dark">Да</button>
+                <button id="yes" type="submit" class="btn btn-outline-dark">Да</button>
             </form>
             <form th:action="@{/head/employees/{id}(id=${employee.getId()})}" method="get">
-                <button type="submit" class="btn btn-outline-dark">Нет</button>
+                <button id="no" type="submit" class="btn btn-outline-dark">Нет</button>
             </form>
         </div>
         <div class="btn-group d-flex vought-footer" role="group" aria-label="...">

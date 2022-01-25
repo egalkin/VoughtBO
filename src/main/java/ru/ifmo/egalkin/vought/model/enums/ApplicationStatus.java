@@ -4,6 +4,7 @@ package ru.ifmo.egalkin.vought.model.enums;
  * Created by egalkin
  * Date: 13.10.2021
  */
+
 public enum ApplicationStatus {
     PENDING("На рассмотрении"),
     APPROVED("Согласовано"),
