@@ -10,11 +10,12 @@
     </parent>
     <groupId>ru.ifmo.egalkin</groupId>
     <artifactId>Vought</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <name>VoughtBO</name>
     <description>VoughtBO</description>
     <properties>
-        <java.version>11</java.version>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
     </properties>
     <dependencies>
         <dependency>

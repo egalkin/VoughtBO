@@ -29,8 +29,8 @@ import javax.websocket.server.PathParam;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -42,9 +42,9 @@ import java.util.stream.Collectors;
 @RequestMapping("/hero")
 public class HeroController {
 
-    private static final Set<ApplicationSortingType> NOT_USED_SORING_TYPES = Set.of(
+    private static final Set<ApplicationSortingType> NOT_USED_SORING_TYPES = new HashSet<>(Arrays.asList(
             ApplicationSortingType.CREATOR_ASC,
-            ApplicationSortingType.CREATOR_DESC
+            ApplicationSortingType.CREATOR_DESC)
     );
 
 
@@ -77,7 +77,7 @@ public class HeroController {
         Incident incident = incidentService.findFirstByActive(true);
         List<Application> applications = applicationService.getEmployeeApplications(principal.getName());
         Comparator<Application> applicationComparator;
-        selectedSortingType = Objects.requireNonNullElse(sortingType, ApplicationSortingType.DATE_ASC);
+        selectedSortingType = sortingType != null ? sortingType :  ApplicationSortingType.DATE_ASC;
         switch (selectedSortingType) {
             case DATE_DESC:
                 applicationComparator = Comparator.comparing(Application::getUpdateDate).reversed();
@@ -131,8 +131,13 @@ public class HeroController {
     @PostMapping("/applications/new")
     public String createRequest(@Valid HeroApplicationCreationRequest request,
                                 BindingResult result,
+                                Model model,
                                 Principal principal) {
         if (result.hasErrors()) {
+            List<Employee> headEmployees = employeeService.findAllByDepartment(Department.HEAD);
+            Incident incident = incidentService.findFirstByActive(true);
+            model.addAttribute("anyIncident", incident != null);
+            model.addAttribute("headEmployees", headEmployees);
             return "hero/create-application";
         }
         applicationService.createHeroRequest(principal.getName(), request);
@@ -174,7 +179,7 @@ public class HeroController {
                                Principal principal) {
         EventAggregationType selectedAggregationType;
         Incident incident = incidentService.findFirstByActive(true);
-        selectedAggregationType = Objects.requireNonNullElse(aggregationType, EventAggregationType.DAY);
+        selectedAggregationType = aggregationType != null ? aggregationType : EventAggregationType.DAY;
         List<Event> events = eventService.getEmployeeActualEventsByAggregationType(principal.getName(), selectedAggregationType);
         List<EventAggregationType> aggregationTypes = Arrays.stream(EventAggregationType.values())
                 .filter(st -> st != selectedAggregationType)

@@ -28,9 +28,10 @@ import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 import java.security.Principal;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -39,9 +40,9 @@ import java.util.stream.Stream;
 @RequestMapping("/lab")
 public class LaboratoryController {
 
-    private static final Set<ApplicationSortingType> NOT_USED_SORING_TYPES = Set.of(
+    private static final Set<ApplicationSortingType> NOT_USED_SORING_TYPES = new HashSet<>(Arrays.asList(
             ApplicationSortingType.CREATOR_ASC,
-            ApplicationSortingType.CREATOR_DESC
+            ApplicationSortingType.CREATOR_DESC)
     );
 
     @Autowired
@@ -70,7 +71,7 @@ public class LaboratoryController {
         ApplicationSortingType selectedSortingType;
         List<Application> applications = applicationService.getEmployeeApplications(principal.getName());
         Comparator<Application> applicationComparator;
-        selectedSortingType = Objects.requireNonNullElse(sortingType, ApplicationSortingType.DATE_ASC);
+        selectedSortingType = sortingType != null ? sortingType : ApplicationSortingType.DATE_ASC;
         switch (selectedSortingType) {
             case DATE_DESC:
                 applicationComparator = Comparator.comparing(Application::getUpdateDate).reversed();
@@ -243,7 +244,7 @@ public class LaboratoryController {
         Employee scientist = employeeService.findByEmail(principal.getName());
         List<Employee> possibleMembers = employeeService.findAllPossibleExperimentMembers(
                         Department.LABORATORY,
-                        List.of(scientist.getId())
+                        Collections.singletonList(scientist.getId())
                 )
                 .stream()
                 .filter(emp -> !emp.getExperiments().contains(experiment))

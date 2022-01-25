@@ -24,8 +24,8 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,9 +33,9 @@ import java.util.stream.Collectors;
 @RequestMapping("/pr")
 public class PrController {
 
-    private static final Set<ApplicationSortingType> NOT_USED_SORING_TYPES = Set.of(
+    private static final Set<ApplicationSortingType> NOT_USED_SORING_TYPES = new HashSet<>(Arrays.asList(
             ApplicationSortingType.CREATOR_ASC,
-            ApplicationSortingType.CREATOR_DESC
+            ApplicationSortingType.CREATOR_DESC)
     );
 
     @Autowired
@@ -109,7 +109,7 @@ public class PrController {
         ApplicationSortingType selectedSortingType;
         List<Application> applications = applicationService.getEmployeeApplications(principal.getName());
         Comparator<Application> applicationComparator;
-        selectedSortingType = Objects.requireNonNullElse(sortingType, ApplicationSortingType.DATE_ASC);
+        selectedSortingType = sortingType != null ? sortingType : ApplicationSortingType.DATE_ASC;
         switch (selectedSortingType) {
             case DATE_DESC:
                 applicationComparator = Comparator.comparing(Application::getUpdateDate).reversed();

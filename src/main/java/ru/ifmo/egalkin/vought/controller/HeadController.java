@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.thymeleaf.model.IModel;
 import ru.ifmo.egalkin.vought.controller.request.EmployeeCreationRequest;
 import ru.ifmo.egalkin.vought.controller.request.EmployeeUpdateRequest;
 import ru.ifmo.egalkin.vought.controller.request.HeroUpdateRequest;
@@ -31,9 +30,9 @@ import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 import java.security.Principal;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -70,10 +69,10 @@ public class HeadController {
         Employee headEmployee = employeeService.findByEmail(principal.getName());
         EmployeeSortingType selectedSortingType;
         List<Employee> employees = headEmployee.isCeo() ?
-                employeeService.findAllByIdNotIn(List.of(headEmployee.getId())) :
-                employeeService.findByDepartmentNotIn(List.of(Department.HEAD));
+                employeeService.findAllByIdNotIn(Collections.singletonList(headEmployee.getId())) :
+                employeeService.findByDepartmentNotIn(Collections.singletonList(Department.HEAD));
         Comparator<Employee> employeeComparator;
-        selectedSortingType = Objects.requireNonNullElse(sortingType, EmployeeSortingType.DEPARTMENT_ASC);
+        selectedSortingType = sortingType != null ? sortingType : EmployeeSortingType.DEPARTMENT_ASC;
         switch (selectedSortingType) {
             case DEPARTMENT_DESC:
                 employeeComparator = Comparator.comparing(emp -> emp.getDepartment().getDescription());
@@ -201,7 +200,7 @@ public class HeadController {
         ApplicationSortingType selectedSortingType;
         List<Application> applications = applicationService.getHeadEmployeeApplications(principal.getName());
         Comparator<Application> applicationComparator;
-        selectedSortingType = Objects.requireNonNullElse(sortingType, ApplicationSortingType.DATE_ASC);
+        selectedSortingType = sortingType != null ? sortingType : ApplicationSortingType.DATE_ASC;
         switch (selectedSortingType) {
             case DATE_DESC:
                 applicationComparator = Comparator.comparing(Application::getUpdateDate).reversed();
@@ -273,7 +272,7 @@ public class HeadController {
                                Model model,
                                Principal principal) {
         EventAggregationType selectedAggregationType;
-        selectedAggregationType = Objects.requireNonNullElse(aggregationType, EventAggregationType.DAY);
+        selectedAggregationType = aggregationType != null ? aggregationType : EventAggregationType.DAY;
         List<Event> events = eventService.getEmployeeActualEventsByAggregationType(principal.getName(), selectedAggregationType);
         List<EventAggregationType> aggregationTypes = Arrays.stream(EventAggregationType.values())
                 .filter(st -> st != selectedAggregationType)
