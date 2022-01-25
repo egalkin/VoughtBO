@@ -24,20 +24,21 @@ insert into employees_roles(employee_id, role_id) values
 (5, 5);
 
 insert into application(id, application_status, application_type, description, meeting_time, name, reject_reason, update_date, creator_id, aim_id) values
-(1, 'APPROVED', 'MEETING',  'Описание 1', '2022-01-27 13:54:00', 'Название 1', null, '2022-01-22', 3, 1),
-(2, 'REJECTED', 'PR_STRATEGY', 'Описание 2', '2022-01-27 13:54:00', 'Название 2', 'Причина отказа', '2022-01-22', 3, 1),
-(3, 'PENDING', 'RESEARCH', 'Описание 3', '2022-01-27 13:54:00', 'Название 3', null, '2022-01-22', 2, 1);
+(1, 'APPROVED', 'MEETING',  'Описание заявки 1', '2022-01-27 13:54:00', 'Заявка 1', null, '2022-01-20', 3, 1),
+(2, 'REJECTED', 'PR_STRATEGY', 'Описание заявки 2', '2022-01-28 13:54:00', 'Заявка 2', 'Причина отказа', '2022-01-21', 3, 1),
+(3, 'PENDING', 'RESEARCH', 'Заявка на одобрение', '2022-01-29 13:54:00', 'Заявка 3', null, '2022-01-22', 2, 1),
+(4, 'PENDING', 'RESEARCH', 'Заявка на отклонение', '2022-02-26 13:54:00', 'Заявка 4', null, '2022-01-23', 2, 1);
 
 insert into event(id, address, description, event_time, name, priority, creator_id, aim_id) values
-(1, 'Адрес встречи', 'описание встречи', '2022-01-24 13:33:00', 'Название 1', 3, 4, 1);
+(1, 'Адрес встречи 1', 'Описание встречи', '2022-01-27 13:33:00', 'Встреча 1', 3, 4, 1);
 
 insert into employee_events(employee_id, event_id) values
 (1, 1),
 (4, 1);
 
 insert into incident(id, active, address, armament_level, enemies_number, incident_type, info, creator_id) values
-(1, false , 'Адрес', 5, 5, 'ROBBERY', 'Инф', 5),
-(2, true , 'Адрес', 5, 5, 'ROBBERY', 'Инф', 5);
+(1, false , 'Адрес 1', 5, 5, 'ROBBERY', 'Инф', 5),
+(2, true , 'Адрес 2', 5, 5, 'ROBBERY', 'Инф', 5);
 
 alter sequence hibernate_sequence restart with 100;
 

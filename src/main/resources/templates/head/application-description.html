@@ -70,10 +70,10 @@
         </div>
         <div class = "application-buttons" th:if="${appl.isPending()}">
             <form th:action="@{/head/applications/{id}/approve(id=${appl.getId()})}" method="post">
-                <button type="submit" class="btn btn-outline-dark">Одобрить</button>
+                <button id="approve" type="submit" class="btn btn-outline-dark">Одобрить</button>
             </form>
             <form th:action="@{/head/applications/{id}/reject(id=${appl.getId()})}" method="get">
-                <button type="submit" class="btn btn-outline-dark">Отказать</button>
+                <button id="reject" type="submit" class="btn btn-outline-dark">Отказать</button>
             </form>
         </div>
         <div class="btn-group d-flex vought-footer" role="group" aria-label="...">

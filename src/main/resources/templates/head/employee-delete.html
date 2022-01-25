@@ -26,10 +26,10 @@
         </div>
         <div class = "application-buttons">
             <form th:action="@{/head/employees/{id}/delete(id=${employee.getId()})}" method="post">
-                <button type="submit" class="btn btn-outline-dark">Да</button>
+                <button id="yes" type="submit" class="btn btn-outline-dark">Да</button>
             </form>
             <form th:action="@{/head/employees/{id}(id=${employee.getId()})}" method="get">
-                <button type="submit" class="btn btn-outline-dark">Нет</button>
+                <button id="no" type="submit" class="btn btn-outline-dark">Нет</button>
             </form>
         </div>
         <div class="btn-group d-flex vought-footer" role="group" aria-label="...">

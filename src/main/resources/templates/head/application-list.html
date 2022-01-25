@@ -42,7 +42,7 @@
         </div>
         <table class="table hover-table application-table">
             <tbody>
-                <tr th:each="el : ${applications}" class="clickable-row hover-tr" th:href="@{/head/applications/{id}(id=${el.id})}">
+                <tr th:each="el : ${applications}" class="clickable-row hover-tr" th:href="@{/head/applications/{id}(id=${el.id})}" th:id="${el.getId()}">
                     <td>
                         <p class="table-center left-element" th:text="${el.getName()}"></p>
                     </td>

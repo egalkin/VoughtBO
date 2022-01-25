@@ -4,10 +4,12 @@
     <title>Персонал</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <!-- CSS only -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" type="text/css" th:href="@{/css/template.css}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/template.css}"/>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+            crossorigin="anonymous"></script>
     <script th:src="@{/js/main.js}"></script>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -27,10 +29,10 @@
     </div>
 
     <section class="all-actual-information">
-        <div class = "control-items">
-            <div class = "sorting-menu">
+        <div class="control-items">
+            <div class="sorting-menu">
                 <label for="sortingType">Сортировать по </label>
-                <select class = "" name = "sortingType"  id="sortingType" onchange="">
+                <select class="" name="sortingType" id="sortingType" onchange="">
                     <option th:value="${selectedSortingType}" th:text="${selectedSortingType.getDescription}"></option>
                     <option
                             th:each="sortingType: ${sortingTypes}"
@@ -39,20 +41,23 @@
                     </option>
                 </select>
             </div>
-            <a class="btn btn-outline-dark" href="/head/employees/new" role="button">Создать сотрудника</a>
+            <a id="newEmp" class="btn btn-outline-dark" href="/head/employees/new" role="button">Создать сотрудника</a>
         </div>
         <table class="table hover-table employees-table">
             <tbody>
             <tr th:each="el : ${employees}" class="clickable-row hover-tr"
-                th:href="${el.isHero()} ? @{/head/employees/hero/{id}(id=${el.id})} : @{/head/employees/{id}(id=${el.id})}">
+                th:href="${el.isHero()} ? @{/head/employees/hero/{id}(id=${el.id})} : @{/head/employees/{id}(id=${el.id})}"
+                th:id="${el.getId()}">
                 <td>
-                    <img class="left-element" th:src="@{/images/{file}(file=${el.getAvatarFileName()})}" height="100" width="100" />
+                    <img class="left-element" th:src="@{/images/{file}(file=${el.getAvatarFileName()})}" height="100"
+                         width="100"/>
                 </td>
                 <td class="cell">
                     <p class="table-center" th:text="${el.getFullName()}"></p>
                 </td>
                 <td>
-                    <p class="table-center" th:utext="'<strong>Отдел:</strong> ' + ${el.getDepartment().getDescription()}"></p>
+                    <p class="table-center"
+                       th:utext="'<strong>Отдел:</strong> ' + ${el.getDepartment().getDescription()}"></p>
                 </td>
             </tr>
             </tbody>

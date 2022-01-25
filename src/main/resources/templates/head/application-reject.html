@@ -29,10 +29,10 @@
             <form class="grid-form" th:action="@{/head/applications/{id}/reject(id=${appl.getId()})}" method="post" th:object="${applicationRejectionRequest}">
                 <div class="full-width form-group">
                     <label for="">Причина отказа</label>
-                    <textarea name="" id="" cols="30" rows="7" th:field="*{reason}"></textarea>
+                    <textarea name="" id="reason" cols="30" rows="7" th:field="*{reason}"></textarea>
                 </div>
                 <div class="full-width form-group">
-                    <button class = "btn btn-outline-dark grid-button" type="submit">Отказать</button>
+                    <button id="reject" class = "btn btn-outline-dark grid-button" type="submit">Отказать</button>
                 </div>
             </form>
         </div>

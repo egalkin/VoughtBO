@@ -24,7 +24,7 @@
     <form action="/head/employees/new" class="form-inline my-2 my-lg-0" method="post" th:object="${employeeCreationRequest}">
         <div class="form-group">
             <label for="selectedDepartment">Департамент</label>
-            <select class = "department-select" th:field="*{department}"  id="selectedDepartment">
+            <select th:id="selDep" class = "department-select" th:field="*{department}"  id="selectedDepartment">
                 <option
                         th:each="department: ${departments}"
                         th:value="${department.toString()}"
@@ -32,17 +32,17 @@
                 </option>
             </select>
         </div>
-        <div class="form-group">
-            <input class="form-control mr-sm-2" th:type="text" th:field="*{firstName}" placeholder="Имя сотрудника"/>
+        <div  class="form-group">
+            <input id="fn" class="form-control mr-sm-2" th:type="text" th:field="*{firstName}" placeholder="Имя сотрудника"/>
             <div class="alert alert-warning" th:if="${#fields.hasErrors('firstName')}"
                  th:errors="*{firstName}"></div>
         </div>
-        <div class="form-group">
-            <input class="form-control mr-sm-2" th:type="text" th:field="*{lastName}" placeholder="Фамилия сотрудника"/>
+        <div  class="form-group">
+            <input id="ln" class="form-control mr-sm-2" th:type="text" th:field="*{lastName}" placeholder="Фамилия сотрудника"/>
             <div class="alert alert-warning" th:if="${#fields.hasErrors('lastName')}"
                  th:errors="*{lastName}"></div>
         </div>
-        <button class="btn btn-outline-dark" type="submit">Добавить</button>
+        <button id="add" class="btn btn-outline-dark" type="submit">Добавить</button>
     </form>
     <div class="btn-group d-flex vought-footer" role="group" aria-label="...">
         <a href="/head/employees" class="btn btn-default w-100 chosen-button">Персонал</a>

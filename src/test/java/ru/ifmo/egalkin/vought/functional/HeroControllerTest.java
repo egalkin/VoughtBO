@@ -68,7 +68,7 @@ public class HeroControllerTest {
                 .andDo(print())
                 .andExpect(authenticated())
                 .andExpect(xpath("/html/head/nav/div/a").string("Vought Hero Subsystem"))
-                .andExpect(xpath("/html/body/div/div/H1").string("Заявки на встречу с руководством"))
+                .andExpect(xpath("/html/body/div/div/H1").string("Заявка на встречу с руководством"))
                 .andExpect(status().isOk());
 
         assertTrue(applicationRepository.existsById(1L));
